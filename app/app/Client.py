@@ -44,7 +44,7 @@ class Client:
         if response.headers.get_content_type() != 'application/json':
             raise ValueError('Invalid content-type')
 
-        content = response.read().decode()
+        content = response.read()
 
         json_result = json.loads(content)
 

@@ -1,19 +1,26 @@
-from flask import Flask
+from flask import Flask, Response, render_template
 from datetime import date, datetime
 
 app = Flask(__name__)
 
 from Parameter import PeriodParameter, ParameterMap, spread_params_in_periods
 from Client import Client
+import json
 
+
+@app.route('/')
+def home():
+    return render_template('home.html')
 
 @app.route('/<term>/<start>/<end>', methods=['GET'])
 def request(term, start, end):
-    return request(
-        'contrato',
+    result = request(
+        term,
         datetime.strptime(start, '%Y-%m-%d'), 
         datetime.strptime(end, '%Y-%m-%d')
     )
+    result_json = json.dumps(result, ensure_ascii=False).encode('utf8')
+    return Response(result_json, mimetype='application/json')
 
 
 def request(term, start_date, end_date):

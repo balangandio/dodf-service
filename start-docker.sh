@@ -1,3 +1,9 @@
 #!/bin/bash
-docker build -t dodf-service .
-docker run -p 56733:80 --name=dodf-service dodf-service
+set -e
+
+image_name='dodf-service'
+container_name='dodf-service'
+
+docker stop $container_name || true && docker rm $container_name || true && docker rmi $image_name || true
+docker build -t $image_name .
+docker run -d -p 4444:80 --name=$container_name $image_name

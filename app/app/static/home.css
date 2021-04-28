@@ -1,0 +1,55 @@
+html, body {
+    font-size: 16px;
+}
+
+h1.title {
+    margin-left: 1em;
+}
+
+.form-container {
+    padding: 1em 2em;
+}
+.form-inner {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 800px;
+}
+
+.input-group {
+    margin-bottom: 2em;
+    flex: 1;
+    margin-right: 1em;
+}
+.input-group label {
+    font-size: .9em;
+    margin-bottom: .5em;
+    display: block;
+}
+.input-group input {
+    font-size: 1.2em;
+    width: 150px;
+}
+
+.btn-submit {
+    margin-top: 1.2em;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+.btn-submit[disabled] {
+    cursor: default;
+}
+
+.data-container {
+    position: relative;
+}
+.data-container.hided {
+    visibility: hidden;
+}
+.document-container {
+    padding: 1em;
+    margin: 2em;
+    background: #ccc;
+}
+.data-container > .document-container:first-child {
+    margin-top: 0;
+}
