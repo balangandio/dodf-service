@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from Context import ContratoContext
+
 
 class Page:
     def __init__(self, json_result):
@@ -69,7 +71,7 @@ class PageCollection:
     	documents = []
 
     	for page in self.pages:
-    		documents.extend(list(map(lambda doc : doc.to_dict(), page.documents)))
+    		documents.extend(list(map(lambda doc : doc, page.documents)))
 
     	return documents
 
@@ -77,7 +79,7 @@ class PageCollection:
         documents = self.all_documents()
 
         result = {
-            'documents': documents,
+            'documents': list(map(lambda doc : self._document_dict(doc), documents)),
             'total_of_documents': len(documents)
         }
 
@@ -96,7 +98,7 @@ class PageCollection:
 
     	for doc in documents:
     		if doc is not None:
-    			doc_date = datetime.strptime(doc['dt_previsao_publicacao'], '%Y-%m-%d %H:%M:%S')
+    			doc_date = datetime.strptime(doc.dt_previsao_publicacao, '%Y-%m-%d %H:%M:%S')
 
     			if lowest_date is None:
     				lowest_date = doc_date
@@ -109,3 +111,11 @@ class PageCollection:
     				biggest_date = doc_date
 
     	return (lowest_date, biggest_date)
+
+    def _document_dict(self, doc):
+        context = ContratoContext(doc)
+
+        return {
+            'document': doc.to_dict(),
+            'context': context.to_dict()
+        }

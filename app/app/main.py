@@ -1,11 +1,21 @@
 from flask import Flask, Response, render_template
 from datetime import date, datetime
-
-app = Flask(__name__)
+from bs4 import BeautifulSoup
+import nltk
+from nltk.text import Text
+from nltk import TokenSearcher
+import mimetypes
 
 from Parameter import PeriodParameter, ParameterMap, spread_params_in_periods
 from Client import Client
 import json
+
+
+nltk.download('punkt')
+mimetypes.add_type('text/css', '.css')
+mimetypes.add_type('application/javascript', '.js')
+
+app = Flask(__name__)
 
 
 @app.route('/')
@@ -37,3 +47,34 @@ def request(term, start_date, end_date):
         'end_date': end_date.strftime('%Y-%m-%d'),
         'result': collection.to_dict()
     }
+
+def extract_text(html_doc):
+    soup = BeautifulSoup(html_doc, 'html.parser')
+
+    strings = []
+    for string in soup.stripped_strings:
+        strings.append(repr(string))
+
+    return strings
+
+def concordance(text, term):
+    text = Text(tokenize(text))
+    return text.concordance_list(term)
+
+def concordanceIndex(text, term):
+    index = nltk.text.ConcordanceIndex(tokenize(text))
+    return index.find_concordance(term)
+
+def findall(text, regex):
+    text = Text(tokenize(text))
+    ts = TokenSearcher(text)
+    return ts.findall(regex)
+
+def sentences(text):
+    return nltk.sent_tokenize(text)
+
+def tokenize(text):
+    return nltk.word_tokenize(text)
+
+def strings_to_text(strings):
+    return ' '.join(strings)

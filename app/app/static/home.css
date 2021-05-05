@@ -50,6 +50,33 @@ h1.title {
     margin: 2em;
     background: #ccc;
 }
+.document-title,
+.document-content {
+}
+
+.document-sentences {
+    padding: 1em 0;
+}
+.document-sentences > button {
+    cursor: pointer;
+}
+.document-sentences > ul {
+    background: #f9f9f9;
+    margin-bottom: 0;
+    padding-top: .5em;
+    padding-bottom: 1.5em;
+}
+.document-sentences-field-list > li:first-child {
+    margin-bottom: .5em;
+}
+.document-sentences-field-list > li:first-child > span {
+    border-radius: 5px;
+    padding: .2em;
+    background: #ccc;
+}
+.document-sentences-field-list > li:last-child > span {
+    font-weight: 'bold';
+}
 .data-container > .document-container:first-child {
     margin-top: 0;
 }
