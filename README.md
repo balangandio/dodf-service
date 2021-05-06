@@ -1,14 +1,26 @@
 # DODF search service
 
 # Install
-pip install flask
+```
+pip install -r app/app/requirements.txt
+```
 
 # Run
-Execute Flask with .bat or .sh scripts.
+Execute Flask with script at: `run.[sh|bat]`
 
-# Request: `/<term>/<start_date>/<end_date>`
+# Docker
+Build and run:
 ```
-GET /contrato/2021-03-21/2021-04-14
+docker build -t <image-name> .
+docker run -d -p 4444:<external-port> --name=<container-name> <image-name>
+```
+Auxiliar script at: `start-docker.sh`
+
+# Request: `/api/<term>/<start_date>/<end_date>`
+```
+GET /api/contrato/2021-03-21/2021-04-14
+```
+```json
 {
     "term": "contrato",
     "start_date": "2021-03-21",
@@ -16,21 +28,32 @@ GET /contrato/2021-03-21/2021-04-14
     "result": {
         "documents": [
             {
-                "dt_previsao_publicacao": "2021-03-22 08:00:00",
-                "letra_jornal": null,
-                "nome": "Administração Regional do Núcleo Bandeirante",
-                "num_jornal": "54",
-                "num_ordem_demandante": "67",
-                "num_ordem_tipo_materia": "999",
-                "num_regra_tipo_jornal": "31",
-                "ordem_tipo_materia_secao": null,
-                "preambulo": null,
-                "row_number": "4",
-                "secao": "Seção III",
-                "texto": "<p style=\"text-align:justify;\">Com fulc",
-                "tipo": "Reconhecimento de dívida",
-                "tipo_jornal": "Normal",
-                "titulo": "RECONHECIMENTO DE DÍVIDA"
+                "context": {
+                    "sentences": [
+                        {
+                            "sentence": "Processo: 00054.00007911/2019-97.",
+                            "field": "Processo",
+                            "value": "00054.00007911/2019-97."
+                        }
+                    ]
+                },
+                "document": {
+                    "dt_previsao_publicacao": "2021-03-22 08:00:00",
+                    "letra_jornal": null,
+                    "nome": "Administração Regional do Núcleo Bandeirante",
+                    "num_jornal": "54",
+                    "num_ordem_demandante": "67",
+                    "num_ordem_tipo_materia": "999",
+                    "num_regra_tipo_jornal": "31",
+                    "ordem_tipo_materia_secao": null,
+                    "preambulo": null,
+                    "row_number": "4",
+                    "secao": "Seção III",
+                    "texto": "<p style=\"text-align:justify;\">Com fulc",
+                    "tipo": "Reconhecimento de dívida",
+                    "tipo_jornal": "Normal",
+                    "titulo": "RECONHECIMENTO DE DÍVIDA"
+                }
             }
         ],
         "previsao_publicacao": {
@@ -45,6 +68,8 @@ GET /contrato/2021-03-21/2021-04-14
 # Service
 ```
 GET https://dodf.df.gov.br/default/index/resultado-json?termo=%22contrato%22&tpBusca=Contexto&tpSecao=Todas&tpJornal=Todos&tpLocalBusca=tudo&dtInicial=13/04&dtFinal=14/04&ano=2021
+```
+```json
 {
 	"paginacao": {
         "tmgPaginas": 10,

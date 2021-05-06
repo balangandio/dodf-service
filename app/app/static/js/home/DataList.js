@@ -1,3 +1,5 @@
+import { replaceText } from '../util/text.js';
+
 export default class DataList {
 
     constructor(containerElement) {
@@ -6,12 +8,16 @@ export default class DataList {
 
     setResults(requestResult) {
         const documents = (requestResult.result && requestResult.result.documents) || [];
+        const { term } = requestResult;
         
-        this.containerElement.innerHTML = '';
+        const containerList = this.containerElement.querySelector('.data-container-list');
+        containerList.innerHTML = '';
 
         documents.forEach(doc => {
-            this.containerElement.append(this._createDocument(doc));
+            containerList.append(this._createDocument(doc, term));
         });
+
+        this._setTotal(documents.length);
     }
 
     setVisibility(visible) {
@@ -20,19 +26,35 @@ export default class DataList {
             : this.containerElement.classList.add('hided');
     }
 
-    _createDocument(doc) {
+    _setTotal(total) {
+        const totalContainer = this.containerElement.querySelector('.total-container');
+        totalContainer.innerHTML = '';
+
+        const span = document.createElement('span');
+        span.innerText = total > 0 ? `Total: ${total}` : 'Nenhum registro encontrato!';
+        totalContainer.append(span);
+        totalContainer.setAttribute('data-total', total);
+    }
+
+    _createDocument(doc, term) {
         const docContainer = document.createElement('div');
         docContainer.className = 'document-container';
 
         const titleContainer = document.createElement('div');
         titleContainer.className = 'document-title';
         docContainer.append(titleContainer);
-        titleContainer.innerText = doc.document.titulo;
+        titleContainer.insertAdjacentHTML(
+            'beforeend',
+            this._highlightedTerm(doc.document.titulo, term)
+        );
 
         const contentContainer = document.createElement('div');
         contentContainer.className = 'document-content';
         docContainer.append(contentContainer);
-        contentContainer.insertAdjacentHTML('beforeend', doc.document.texto);
+        contentContainer.insertAdjacentHTML(
+            'beforeend',
+            this._highlightedTerm(doc.document.texto, term)
+        );
 
         const sentences = this._createSentencesList(doc);
         docContainer.append(sentences);
@@ -103,5 +125,11 @@ export default class DataList {
         } else {
             list.style.display = 'none';
         }
+    }
+
+    _highlightedTerm(content, term) {
+        return replaceText(content, term, term => {
+            return `<span class="highlight">${term}</span>`;
+        });
     }
 }

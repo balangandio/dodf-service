@@ -6,8 +6,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>DODF - Busca</title>
 
-		<link rel="stylesheet" href="/static/home.css" type="text/css" />
-		<script src="/static/home/index.js" type="module"></script>
+		<link rel="stylesheet" href="/static/css/home.css" type="text/css" />
+		<script src="/static/js/home/index.js" type="module"></script>
 	</head>
 
 	<body>
@@ -18,15 +18,18 @@
 				<div class="form-inner">
 					<div class="input-group">
 						<label>Termo</label>
-						<input type="text" name="termo" placeholder="Termo" value="contrato" />
+						<input type="text" name="termo" placeholder="Termo" value="contrato"
+							minlength="5" required />
 					</div>
 					<div class="input-group">
 						<label>Data inicial</label>
-						<input type="text" name="dtInicial" placeholder="Data inicial - ex.: dd/mm/yyyy" value="13/04/2021" />
+						<input type="text" name="dtInicial" placeholder="Data inicial - ex.: dd/mm/yyyy" value="13/04/2021"
+							required />
 					</div>
 					<div class="input-group">
 						<label>Data final</label>
-						<input type="text" name="dtFinal" placeholder="Data final - ex.: dd/mm/yyyy" value="14/04/2021" />
+						<input type="text" name="dtFinal" placeholder="Data final - ex.: dd/mm/yyyy" value="14/04/2021"
+							required />
 					</div>
 					<div class="input-group">
 						<button type="submit" class="btn-submit">Pesquisar</button>
@@ -35,7 +38,9 @@
 			</form>
 		</div>
 
-		<div class="data-container"></div>
-
+		<div class="data-container">
+			<div class="total-container"></div>
+			<div class="data-container-list"></div>
+		</div>
 	</body>
 </html>

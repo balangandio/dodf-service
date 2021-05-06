@@ -39,19 +39,24 @@ h1.title {
     cursor: default;
 }
 
+
 .data-container {
     position: relative;
+    margin: 0 2em;
 }
 .data-container.hided {
     visibility: hidden;
 }
 .document-container {
+    position: relative;
     padding: 1em;
-    margin: 2em;
+    margin: 2em 0;
     background: #ccc;
 }
-.document-title,
-.document-content {
+.document-title .highlight,
+.document-content .highlight {
+    background: white;
+    border-radius: 3px;
 }
 
 .document-sentences {
@@ -77,6 +82,20 @@ h1.title {
 .document-sentences-field-list > li:last-child > span {
     font-weight: 'bold';
 }
-.data-container > .document-container:first-child {
+.data-container-list > .document-container:first-child {
     margin-top: 0;
+}
+.total-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateY(-150%);
+}
+.total-container[data-total="0"] {
+    right: unset;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.total-container > span {
+    font-weight: bold;
 }
