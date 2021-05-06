@@ -1,19 +1,9 @@
-from flask import Flask, Response, render_template
-from datetime import date, datetime
-from bs4 import BeautifulSoup
-import nltk
-from nltk.text import Text
-from nltk import TokenSearcher
-import mimetypes
-
-from Parameter import PeriodParameter, ParameterMap, spread_params_in_periods
-from Client import Client
 import json
+from flask import Flask, Response, render_template, request
+from datetime import date, datetime
 
-
-nltk.download('punkt')
-mimetypes.add_type('text/css', '.css')
-mimetypes.add_type('application/javascript', '.js')
+import setup
+from Service import Service
 
 app = Flask(__name__)
 
@@ -22,59 +12,36 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
-@app.route('/<term>/<start>/<end>', methods=['GET'])
-def request(term, start, end):
-    result = request(
+@app.route('/api/<term>/<start>/<end>', methods=['GET'])
+def search_by_route(term, start, end):
+    result = Service().search(
         term,
         datetime.strptime(start, '%Y-%m-%d'), 
         datetime.strptime(end, '%Y-%m-%d')
     )
-    result_json = json.dumps(result, ensure_ascii=False).encode('utf8')
-    return Response(result_json, mimetype='application/json')
 
+    return json_response(result)
 
-def request(term, start_date, end_date):
-    client = Client()
-
-    parameters = ParameterMap(term)
-    params = spread_params_in_periods(parameters, start_date, end_date)
-
-    collection = client.request_all_pages(params)
-
-    return {
-        'term': term,
-        'start_date': start_date.strftime('%Y-%m-%d'),
-        'end_date': end_date.strftime('%Y-%m-%d'),
-        'result': collection.to_dict()
+@app.route('/api/search', methods=['GET'])
+def search_by_params():
+    params = {
+        'term': request.args.get('term', default = None, type = str),
+        'start': request.args.get('start', default = None, type = str),
+        'end': request.args.get('end', default = None, type = str)
     }
 
-def extract_text(html_doc):
-    soup = BeautifulSoup(html_doc, 'html.parser')
+    for (k, value) in params.items():
+        if value is None:
+            raise ValueError('Parameter [{}] is required'.format(k))
 
-    strings = []
-    for string in soup.stripped_strings:
-        strings.append(repr(string))
+    result = Service().search(
+        params['term'],
+        datetime.strptime(params['start'], '%Y-%m-%d'), 
+        datetime.strptime(params['end'], '%Y-%m-%d')
+    )
 
-    return strings
+    return json_response(result)
 
-def concordance(text, term):
-    text = Text(tokenize(text))
-    return text.concordance_list(term)
-
-def concordanceIndex(text, term):
-    index = nltk.text.ConcordanceIndex(tokenize(text))
-    return index.find_concordance(term)
-
-def findall(text, regex):
-    text = Text(tokenize(text))
-    ts = TokenSearcher(text)
-    return ts.findall(regex)
-
-def sentences(text):
-    return nltk.sent_tokenize(text)
-
-def tokenize(text):
-    return nltk.word_tokenize(text)
-
-def strings_to_text(strings):
-    return ' '.join(strings)
+def json_response(dict_obj):
+    result_json = json.dumps(dict_obj, ensure_ascii=False).encode('utf8')
+    return Response(result_json, mimetype='application/json')

@@ -1,3 +1,4 @@
+import urllib
 from datetime import datetime
 from functools import reduce
 
@@ -66,8 +67,7 @@ class ParameterMap:
         return self
 
     def to_query_string(self):
-        params = list(map(lambda p : p[0] + '=' + str(p[1]), self.params.items()))
-        return reduce(lambda p, n : p + '&' + n, params)
+        return urllib.parse.urlencode(self.params)
 
     def set_params(self, params_dic):
     	self.params = params_dic

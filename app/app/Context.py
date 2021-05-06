@@ -14,7 +14,7 @@ class Context:
 
         strings = []
         for string in soup.stripped_strings:
-            strings.append(repr(string))
+            strings.append(string)
 
         return ' '.join(strings)
 

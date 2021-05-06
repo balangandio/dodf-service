@@ -3,7 +3,7 @@ import DataList from './DataList.js';
 
 export default class HomeApp {
 
-    api = '';
+    api = '/api';
 
     async onFormSubmit(formElement, event) {
         event && event.preventDefault();
@@ -49,10 +49,17 @@ export default class HomeApp {
         return { termo, dtInicial, dtFinal };
     }
 
-    async request({ termo, dtInicial, dtFinal }) {
+    async request(params) {
+        const buildRequestUri = ({ termo, dtInicial, dtFinal }) => {
+            //return `${this.api}/${encodeURIComponent(termo)}/${dtInicial}/${dtFinal}`;
+            const params = this._to_query_string({ term: termo, start: dtInicial, end: dtFinal });
+
+            return `${this.api}/search?${params}`;
+        };
+
         let response;
         try {
-            response = await fetch(`${this.api}/${termo}/${dtInicial}/${dtFinal}`, {
+            response = await fetch(buildRequestUri(params), {
                 method: 'GET'
             });
         } catch(err) {
@@ -84,5 +91,15 @@ export default class HomeApp {
         const [_, dia, mes, ano] = groups;
 
         return `${ano}-${mes}-${dia}`;
+    }
+
+    _to_query_string(obj) {
+        const str = [];
+        for (let p in obj) {
+            if (obj.hasOwnProperty(p)) {
+                str.push(`${encodeURIComponent(p)}=${encodeURIComponent(obj[p])}`);
+            }
+        }
+        return str.join('&');
     }
 }
