@@ -67,7 +67,7 @@ GET /api/contrato/2021-03-21/2021-04-14
 
 # Service
 ```
-GET https://dodf.df.gov.br/default/index/resultado-json?termo=%22contrato%22&tpBusca=Contexto&tpSecao=Todas&tpJornal=Todos&tpLocalBusca=tudo&dtInicial=13/04&dtFinal=14/04&ano=2021
+GET https://dodf.df.gov.br/default/index/resultado-json?termo=contrato&tpBusca=Contexto&tpSecao=Todas&tpJornal=Todos&tpLocalBusca=tudo&dtInicial=13/04&dtFinal=14/04&ano=2021
 ```
 ```json
 {
