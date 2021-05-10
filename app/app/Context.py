@@ -26,7 +26,13 @@ class Context:
 
 
 class ContratoContext(Context):
-    EXTRA_ABBREVIATIONS = ['art', 'doc', 'n']
+    EXTRA_ABBREVIATIONS = ['art', 'doc', 'n', 'nº']
+    REPLACEABLES = {
+        ' - PARTES:': { 'left': '.', 'right': 'PARTES:' },
+        ' – PARTES:': { 'left': '.', 'right': 'PARTES:' },
+        ' - Partes:': { 'left': '.', 'right': 'Partes:' },
+        ' – Partes:': { 'left': '.', 'right': 'Partes:' }
+    }
 
     def __init__(self, document):
         super().__init__(document)
@@ -46,6 +52,7 @@ class ContratoContext(Context):
 
     def sentences_fields(self):
         sents = self.sentences()
+        sents = self._expand_sentences(sents)
         sents_fields = []
         
         for sent in sents:
@@ -72,8 +79,9 @@ class ContratoContext(Context):
         value = None
 
         if search is not None:
-            field = search.group(1)
-            value = search.group(2)
+            if len(search.group(1).split()) <= 5:
+                field = search.group(1)
+                value = search.group(2)
 
         return (field, value)
     
@@ -100,4 +108,29 @@ class ContratoContext(Context):
             self._sentence_tokenizer_optimed = True
 
         return tokenizer
+    
+    def _expand_sentences(self, sentences):
+        expanded_list = []
+
+        for sent in sentences:
+            expanded = False
+
+            for (_from, _to) in self.REPLACEABLES.items():
+                if sent.find(_from) != -1:
+                    expanded = True
+                    splits = sent.split(_from)
+
+                    for index in range(len(splits)):
+                        sub_sent = splits[index]
+
+                        if index == 0:
+                            expanded_list.append(sub_sent + _to['left'])
+                        elif index == len(splits) - 1:
+                            expanded_list.append(_to['right'] + sub_sent)
+                        else:
+                            expanded_list.append(_to['right'] + sub_sent + _to['left'])
+
+            if not expanded:
+                expanded_list.append(sent)
         
+        return expanded_list
