@@ -1,5 +1,6 @@
 import re
 import nltk
+from functools import reduce
 from bs4 import BeautifulSoup
 from nltk import TokenSearcher
 from nltk.text import Text
@@ -27,12 +28,9 @@ class Context:
 
 class ContratoContext(Context):
     EXTRA_ABBREVIATIONS = ['art', 'doc', 'n', 'nº']
-    REPLACEABLES = {
-        ' - PARTES:': { 'left': '.', 'right': 'PARTES:' },
-        ' – PARTES:': { 'left': '.', 'right': 'PARTES:' },
-        ' - Partes:': { 'left': '.', 'right': 'Partes:' },
-        ' – Partes:': { 'left': '.', 'right': 'Partes:' }
-    }
+    IGNORED_FIELDS = ['CNPJ']
+    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(; | – | - )(?P<field_sent>(?P<field>[^:]{1,30}): )')
+    RE_EXTRACT_FIELD_VALUE = re.compile('^([^:]+):(.+)$')
 
     def __init__(self, document):
         super().__init__(document)
@@ -41,7 +39,9 @@ class ContratoContext(Context):
     def sentences(self):
         content = self.document_text()
         tokenizer = self._load_sentence_tokenizer()
-        return tokenizer.tokenize(content)
+        sentences = tokenizer.tokenize(content)
+        
+        return self._expand_sentences(sentences)
     
     def to_dict(self):
         sents_fields = self.sentences_fields()
@@ -52,7 +52,6 @@ class ContratoContext(Context):
 
     def sentences_fields(self):
         sents = self.sentences()
-        sents = self._expand_sentences(sents)
         sents_fields = []
         
         for sent in sents:
@@ -74,7 +73,7 @@ class ContratoContext(Context):
         return sents_fields
 
     def _extract_field_value_by_re(self, sentence):
-        search = re.search('^([^:]+):(.+)$', sentence)
+        search = self.RE_EXTRACT_FIELD_VALUE.search(sentence)
         field = None
         value = None
 
@@ -113,24 +112,26 @@ class ContratoContext(Context):
         expanded_list = []
 
         for sent in sentences:
-            expanded = False
+            matches = list(self.RE_NOT_PUNCTUATED_SENTENCE_FIELD.finditer(sent))
+            matches = list(filter(lambda match : not match.group('field').upper() in self.IGNORED_FIELDS, matches))
 
-            for (_from, _to) in self.REPLACEABLES.items():
-                if sent.find(_from) != -1:
-                    expanded = True
-                    splits = sent.split(_from)
-
-                    for index in range(len(splits)):
-                        sub_sent = splits[index]
-
-                        if index == 0:
-                            expanded_list.append(sub_sent + _to['left'])
-                        elif index == len(splits) - 1:
-                            expanded_list.append(_to['right'] + sub_sent)
-                        else:
-                            expanded_list.append(_to['right'] + sub_sent + _to['left'])
-
-            if not expanded:
+            if len(matches) == 0:
                 expanded_list.append(sent)
-        
+            else:
+                sents_in_between = []
+
+                first_match = matches[0]
+                sents_in_between.append(sent[:first_match.start()])
+
+                if len(matches) > 1:
+                    def _extract_in_between(m1, m2):
+                        sents_in_between.append(sent[m1.start('field_sent'):m2.start()])
+                        return m2
+                    reduce(_extract_in_between, matches)
+                
+                last_match = matches[len(matches) - 1]
+                sents_in_between.append(sent[last_match.start('field_sent'):])
+
+                expanded_list.extend(sents_in_between)
+
         return expanded_list
