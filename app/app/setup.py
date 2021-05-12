@@ -24,5 +24,6 @@ def setup_environment_mimetypes():
     mimetypes.add_type('application/javascript', '.js')
 
 
-setup_nltk_data_packages()
-setup_environment_mimetypes()
+def app_setup():
+    setup_nltk_data_packages()
+    setup_environment_mimetypes()

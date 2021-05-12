@@ -1,6 +1,5 @@
 import urllib
 from datetime import datetime
-from functools import reduce
 
 
 class PeriodParameter:

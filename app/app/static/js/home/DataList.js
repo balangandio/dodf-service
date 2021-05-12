@@ -63,7 +63,8 @@ export default class DataList {
     }
 
     _createSentencesList({ context }) {
-        const { sentences } = context;
+        const { sentences, fields = {} } = context;
+        const fieldsCount = Object.keys(fields).length;
 
         const container = document.createElement('div');
         container.className = 'document-sentences';
@@ -73,12 +74,30 @@ export default class DataList {
         sentencesToggle.addEventListener('click', this._onSentenceClick);
         container.append(sentencesToggle);
 
+        if (fieldsCount) {
+            const fieldsToggle = document.createElement('button');
+            fieldsToggle.innerText = `Campos: ${Object.keys(fields).length }`;
+            fieldsToggle.addEventListener('click', this._onFieldsClick);
+            container.append(fieldsToggle);
+        }
+
         const sentenceList = document.createElement('ul');
+        sentenceList.setAttribute('data-list', 'sentences');
         sentenceList.style.display = 'none';
         sentences.forEach(sent => {
             sentenceList.append(this._createSentenceItem(sent));
         });
         container.append(sentenceList);
+
+        if (fieldsCount) {
+            const fieldsList = document.createElement('ul');
+            fieldsList.setAttribute('data-list', 'fields');
+            fieldsList.style.display = 'none';
+            Object.keys(fields).forEach(key => {
+                fieldsList.append(this._createFieldItem(key, fields[key]));
+            });
+            container.append(fieldsList);
+        }
 
         return container;
     }
@@ -116,15 +135,65 @@ export default class DataList {
         return item;
     }
 
-    _onSentenceClick(event) {
-        const btn = event.target;
-        const list =  btn.parentElement.lastElementChild;
-        
-        if (list.style.display === 'none') {
-            list.style.display = 'block';
-        } else {
-            list.style.display = 'none';
+    _createFieldItem(fieldName, fieldValue) {
+        const item = document.createElement('li');
+
+        const name = document.createElement('span');
+        name.innerText = fieldName;
+        item.append(name);
+
+        const valueList = document.createElement('ul');
+
+        if (fieldName === 'signatarios') {
+            fieldValue.forEach(({ entity, agent }) => {
+                const item = document.createElement('li');
+
+                const desc = document.createElement('span');
+                desc.innerText = entity;
+                item.append(desc);
+
+                const objList = document.createElement('ul');
+                const subItem = document.createElement('li');
+                subItem.innerText = agent;
+                objList.append(subItem);
+
+                item.append(objList);
+                valueList.append(item);
+            });
+        } else if (fieldName === 'processo') {
+            Object.keys(fieldValue).forEach(key => {
+                const valueItem = document.createElement('li');
+                valueItem.innerText = `[ ${key} ] = ${fieldValue[key]}`;
+                valueList.append(valueItem);
+            });
         }
+
+        item.append(valueList);
+
+        return item;
+    }
+
+    _onSentenceClick = (event) => {
+        this._toggleDataList('sentences', event.target.parentElement);
+    }
+
+    _onFieldsClick = (event) => {
+        this._toggleDataList('fields', event.target.parentElement);
+    }
+
+    _toggleDataList(name, parent) {
+        const lists = Array.from(parent.querySelectorAll('ul[data-list]'));
+        lists.forEach(list => {
+            if (list.getAttribute('data-list') === name) {
+                if (list.style.display === 'none') {
+                    list.style.display = 'block';
+                } else {
+                    list.style.display = 'none';
+                }
+            } else {
+                list.style.display = 'none';
+            }
+        });
     }
 
     _highlightedTerm(content, term) {

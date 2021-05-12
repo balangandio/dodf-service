@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from nltk.text import Text
 from nltk import TokenSearcher
 
-from Parameter import PeriodParameter, ParameterMap, spread_params_in_periods
-from Client import Client
+from .Parameter import ParameterMap, spread_params_in_periods
+from .Client import Client
 
 
 class Service:

@@ -1,10 +1,11 @@
 import json
 from flask import Flask, Response, render_template, request
-from datetime import date, datetime
+from datetime import datetime
 
-import setup
-from Service import Service
+from .setup import app_setup
+from .Service import Service
 
+app_setup()
 app = Flask(__name__)
 
 

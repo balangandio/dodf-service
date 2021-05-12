@@ -64,6 +64,10 @@ h1.title {
 }
 .document-sentences > button {
     cursor: pointer;
+    margin-left: .5em;
+}
+.document-sentences > button:first-child {
+    margin-left: 0;
 }
 .document-sentences > ul {
     background: #f9f9f9;

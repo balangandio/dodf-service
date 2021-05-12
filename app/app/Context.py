@@ -2,8 +2,8 @@ import re
 import nltk
 from functools import reduce
 from bs4 import BeautifulSoup
-from nltk import TokenSearcher
-from nltk.text import Text
+
+from .Sentence import Sentence, SignatarioSentenceParser, ProcessoSentenceParser
 
 
 class Context:
@@ -29,8 +29,7 @@ class Context:
 class ContratoContext(Context):
     EXTRA_ABBREVIATIONS = ['art', 'doc', 'n', 'nº']
     IGNORED_FIELDS = ['CNPJ']
-    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(; | – | - )(?P<field_sent>(?P<field>[^:]{1,30}): )')
-    RE_EXTRACT_FIELD_VALUE = re.compile('^([^:]+):(.+)$')
+    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(, |; | – | - )(?P<field_sent>(?P<field>[^:]{1,30}): )')
 
     def __init__(self, document):
         super().__init__(document)
@@ -44,58 +43,44 @@ class ContratoContext(Context):
         return self._expand_sentences(sentences)
     
     def to_dict(self):
-        sents_fields = self.sentences_fields()
+        field_list = []
+        sentences = self.parsed_sentences()
+
+        parsers = [ProcessoSentenceParser(), SignatarioSentenceParser()]
+
+        fields = list(map(lambda p : (p.name, p.parse(sentences)), parsers))
+        fields = list(filter(lambda field : field[1] is not None, fields))
+        def _acc_dict(acc, field):
+            acc.update({ field[0]: field[1] })
+            return acc
+        fields = reduce(_acc_dict, fields, dict())
+
+        for sentence in sentences:
+            field_list.append({
+                'sentence': sentence.sent,
+                'field': sentence.field,
+                'value': sentence.value
+            })
 
         return {
-            'sentences': sents_fields
+            'sentences': field_list,
+            'fields': fields
         }
 
-    def sentences_fields(self):
+    def parsed_sentences(self):
         sents = self.sentences()
-        sents_fields = []
+        sentence_list = []
         
         for sent in sents:
-            (field, value) = self._extract_field_value_by_re(sent)
+            sentence = Sentence.parse_sentence(sent)
 
-            if field is None and value is None and len(sents_fields) > 0:
-                last_sent = sents_fields[len(sents_fields) - 1]
-                last_sent['sentence'] += ' ' + sent
-
-                if last_sent['value'] is not None:
-                    last_sent['value'] += ' ' + sent
+            if sentence.is_empty() and len(sentence_list) > 0:
+                last_one: Sentence = sentence_list[len(sentence_list) - 1]
+                last_one.append(sent)
             else:
-                sents_fields.append({
-                    'sentence': sent,
-                    'field': field,
-                    'value': value
-                })
+                sentence_list.append(sentence)
         
-        return sents_fields
-
-    def _extract_field_value_by_re(self, sentence):
-        search = self.RE_EXTRACT_FIELD_VALUE.search(sentence)
-        field = None
-        value = None
-
-        if search is not None:
-            if len(search.group(1).split()) <= 5:
-                field = search.group(1)
-                value = search.group(2)
-
-        return (field, value)
-    
-    def _extract_field_value_by_ts(self, sentence):
-        tokens = nltk.word_tokenize(sentence, self.language)
-        text = Text(tokens)
-        ts = TokenSearcher(text)
-
-        field = ts.findall('(<.+>{1,})<:><.+>{1,}')
-        value = ts.findall('<.+>{1,}<:>(<.+>{1,})')
-
-        field = ' '.join(field[0]) if len(field) > 0 else None
-        value = ' '.join(value[0]) if len(value) > 0 else None
-
-        return (field, value)
+        return sentence_list
 
     def _load_sentence_tokenizer(self):
         language = self.language
@@ -113,7 +98,16 @@ class ContratoContext(Context):
 
         for sent in sentences:
             matches = list(self.RE_NOT_PUNCTUATED_SENTENCE_FIELD.finditer(sent))
-            matches = list(filter(lambda match : not match.group('field').upper() in self.IGNORED_FIELDS, matches))
+
+            def _is_match_accepted(match):
+                if match.group(1) == ', ':
+                    _field = re.search('(?i)^PEL[AO] CONTRATAD[AO]$', match.group(3))
+                    if _field is None:
+                        return False
+
+                return not match.group('field').upper() in self.IGNORED_FIELDS
+            
+            matches = list(filter(_is_match_accepted, matches))
 
             if len(matches) == 0:
                 expanded_list.append(sent)

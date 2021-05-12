@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from Context import ContratoContext
+from .Context import ContratoContext
 
 
 class Page:
