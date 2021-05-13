@@ -104,7 +104,6 @@ class ContratoContext(Context):
                     _field = re.search('(?i)^PEL[AO] CONTRATAD[AO]$', match.group(3))
                     if _field is None:
                         return False
-
                 return not match.group('field').upper() in self.IGNORED_FIELDS
             
             matches = list(filter(_is_match_accepted, matches))

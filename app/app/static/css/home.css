@@ -63,8 +63,14 @@ h1.title {
     padding: 1em 0;
 }
 .document-sentences > button {
-    cursor: pointer;
     margin-left: .5em;
+}
+.document-sentences > button:not(:disabled) {
+    cursor: pointer;
+}
+.document-sentences > button.active {
+    background: white;
+    border-color: transparent;
 }
 .document-sentences > button:first-child {
     margin-left: 0;
@@ -74,6 +80,29 @@ h1.title {
     margin-bottom: 0;
     padding-top: .5em;
     padding-bottom: 1.5em;
+    display: none;
+}
+.document-sentences > ul.active {
+    display: block;
+}
+.document-sentences > ul[data-list="fields"] {
+    padding-top: 1.3em;
+}
+.document-sentences > ul[data-list="fields"] > li {
+    margin-bottom: 1em;
+}
+.document-sentences > ul[data-list="fields"] > li > span {
+    border-radius: 5px;
+    padding: .2em;
+    background: #ccc;
+    margin-bottom: .8em;
+    display: inline-block;
+}
+.document-sentences > ul[data-list="fields"] li.signatarios li {
+    margin: .5em 0;
+}
+.document-sentences > ul[data-list="fields"] li.signatarios > span {
+    margin-bottom: .3em;
 }
 .document-sentences-field-list > li:first-child {
     margin-bottom: .5em;
