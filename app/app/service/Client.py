@@ -1,8 +1,8 @@
 import json
 from functools import reduce
 
-from .HTTPConnection import HTTPConnection
-from .Page import PageCollection, Page
+from ..util.http import HTTPConnection
+from ..model.Page import PageCollection, Page
 
 
 class Client:

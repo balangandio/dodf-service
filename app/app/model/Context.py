@@ -3,7 +3,12 @@ import nltk
 from functools import reduce
 from bs4 import BeautifulSoup
 
-from .Sentence import Sentence, SignatarioSentenceParser, ProcessoSentenceParser
+from .Sentence import Sentence
+from .parser.processo import ProcessoSentenceParser
+from .parser.signatario import SignatarioSentenceParser
+from .parser.objeto import ObjetoSentenceParser
+from .parser.valor import ValorSentenceParser
+from .parser.nota_empenho import NotaEmpenhoSentenceParser
 
 
 class Context:
@@ -29,7 +34,7 @@ class Context:
 class ContratoContext(Context):
     EXTRA_ABBREVIATIONS = ['art', 'doc', 'n', 'nº']
     IGNORED_FIELDS = ['CNPJ']
-    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(, |; | – | - )(?P<field_sent>(?P<field>[^:]{1,30}): )')
+    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(\. |, |; | – | - )(?P<field_sent>(?P<field>[^:]{1,30}): )')
 
     def __init__(self, document):
         super().__init__(document)
@@ -39,14 +44,20 @@ class ContratoContext(Context):
         content = self.document_text()
         tokenizer = self._load_sentence_tokenizer()
         sentences = tokenizer.tokenize(content)
-        
+
         return self._expand_sentences(sentences)
     
     def to_dict(self):
         field_list = []
         sentences = self.parsed_sentences()
 
-        parsers = [ProcessoSentenceParser(), SignatarioSentenceParser()]
+        parsers = [
+            ProcessoSentenceParser(),
+            SignatarioSentenceParser(),
+            ObjetoSentenceParser(),
+            ValorSentenceParser(),
+            NotaEmpenhoSentenceParser()
+        ]
 
         fields = list(map(lambda p : (p.name, p.parse(sentences)), parsers))
         fields = list(filter(lambda field : field[1] is not None, fields))
@@ -54,6 +65,8 @@ class ContratoContext(Context):
             acc.update({ field[0]: field[1] })
             return acc
         fields = reduce(_acc_dict, fields, dict())
+
+        fields.update({ 'dataPublicacao': self.document.dt_previsao_publicacao })
 
         for sentence in sentences:
             field_list.append({

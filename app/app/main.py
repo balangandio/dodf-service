@@ -3,7 +3,7 @@ from flask import Flask, Response, render_template, request
 from datetime import datetime
 
 from .setup import app_setup
-from .Service import Service
+from .service.Service import Service
 
 app_setup()
 app = Flask(__name__)

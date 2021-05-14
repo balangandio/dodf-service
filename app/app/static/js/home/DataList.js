@@ -1,5 +1,6 @@
 import { replaceText } from '../util/text.js';
-import { SentenceList, FieldList } from './ContextList.js';
+import SentenceList from './SentenceList.js';
+import FieldList from './FieldList.js';
 
 export default class DataList {
 

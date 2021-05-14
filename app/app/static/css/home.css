@@ -98,10 +98,13 @@ h1.title {
     margin-bottom: .8em;
     display: inline-block;
 }
-.document-sentences > ul[data-list="fields"] li.signatarios li {
+.document-sentences > ul[data-list="fields"] li[data-field="notaEmpenho"] li {
+    margin-bottom: .8em;
+}
+.document-sentences > ul[data-list="fields"] li[data-field="signatarios"] li {
     margin: .5em 0;
 }
-.document-sentences > ul[data-list="fields"] li.signatarios > span {
+.document-sentences > ul[data-list="fields"] li[data-field="signatarios"] > span {
     margin-bottom: .3em;
 }
 .document-sentences-field-list > li:first-child {
