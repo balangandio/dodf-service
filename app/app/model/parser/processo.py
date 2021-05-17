@@ -1,4 +1,5 @@
 import re
+from unidecode import unidecode
 
 from ..Sentence import Sentence
 
@@ -6,6 +7,7 @@ from ..Sentence import Sentence
 class ProcessoSentenceParser:
     RE_NUM_PROCESSO = re.compile('((\d+[-\.])+\d+\/\d+([-\.]\d+)?)')
     RE_NUM_PROCESSO_INLINE = re.compile('(?i)Processo ((\d+[-\.])+\d+\/\d+([-\.]\d+)?)')
+    FIELD_NAMES = ['PROCESSO', 'PROCESSO NO']
     name = 'numeroProcesso'
 
     def test(self, sentence: Sentence):
@@ -37,7 +39,8 @@ class ProcessoSentenceParser:
     def _is_sentence_field_processo(self, sentence):
         if sentence.field is None or sentence.value is None:
             return False
-        return sentence.field.upper() == 'PROCESSO'
+        field = unidecode(sentence.field).upper()
+        return field in self.FIELD_NAMES
 
     def _has_inline_num_processo(self, sentence):
         return sentence.value != None and self.RE_NUM_PROCESSO_INLINE.search(sentence.value) != None

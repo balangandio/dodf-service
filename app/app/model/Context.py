@@ -34,7 +34,7 @@ class Context:
 class ContratoContext(Context):
     EXTRA_ABBREVIATIONS = ['art', 'doc', 'n', 'nº']
     IGNORED_FIELDS = ['CNPJ']
-    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(\. |, |; | – | - )(?P<field_sent>(?P<field>[^:]{1,30}): )')
+    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(\. |, |; | – | - )(?P<field_sent>(?P<field>[^:;]{1,30}): )')
 
     def __init__(self, document):
         super().__init__(document)
@@ -114,7 +114,7 @@ class ContratoContext(Context):
 
             def _is_match_accepted(match):
                 if match.group(1) == ', ':
-                    _field = re.search('(?i)^PEL[AO] CONTRATAD[AO]$', match.group(3))
+                    _field = re.search('(?i)^(PEL[AO] )?CONTRATAD[AO]$', match.group(3))
                     if _field is None:
                         return False
                 return not match.group('field').upper() in self.IGNORED_FIELDS

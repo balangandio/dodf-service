@@ -4,22 +4,24 @@ import FieldList from './FieldList.js';
 
 export default class DataList {
 
-    constructor(containerElement) {
+    documents = [];
+    term = undefined;
+
+    constructor(containerElement, fieldFilter) {
         this.containerElement = containerElement;
+        this.fieldFilter = fieldFilter;
+        this.fieldFilter.addListener(this._onFieldFilterEvent);
+    }
+
+    _onFieldFilterEvent = (event, state) => {
+        this._updateDocumentList(state);
     }
 
     setResults(requestResult) {
-        const documents = (requestResult.result && requestResult.result.documents) || [];
-        const { term } = requestResult;
+        this.documents = (requestResult.result && requestResult.result.documents) || [];
+        this.term = requestResult.term;
         
-        const containerList = this.containerElement.querySelector('.data-container-list');
-        containerList.innerHTML = '';
-
-        documents.forEach(doc => {
-            containerList.append(this._createDocument(doc, term));
-        });
-
-        this._setTotal(documents.length);
+        this._updateDocumentList(this.fieldFilter.getState());
     }
 
     setVisibility(visible) {
@@ -28,12 +30,34 @@ export default class DataList {
             : this.containerElement.classList.add('hided');
     }
 
-    _setTotal(total) {
+    _updateDocumentList(filterState) {
+        const containerList = this.containerElement.querySelector('.data-container-list');
+        containerList.innerHTML = '';
+
+        const documents = this.documents.filter(doc => filterState.isDocumentAccepted(doc));
+
+        const total = this.documents.length;
+        const totalVisible = documents.length;
+
+        documents.forEach(doc => {
+            containerList.append(this._createDocument(doc, this.term));
+        });
+
+        this._updateTotalIndicator(total, totalVisible);
+    }
+
+    _updateTotalIndicator(total, totalVisible) {
         const totalContainer = this.containerElement.querySelector('.total-container');
         totalContainer.innerHTML = '';
 
+        let label = total;
+
+        if (totalVisible < total) {
+            label = `${totalVisible} / ${total}`;
+        }
+
         const span = document.createElement('span');
-        span.innerText = total > 0 ? `Total: ${total}` : 'Nenhum registro encontrato!';
+        span.innerText = total > 0 ? `Total: ${label}` : 'Nenhum registro encontrato!';
         totalContainer.append(span);
         totalContainer.setAttribute('data-total', total);
     }

@@ -6,6 +6,29 @@ h1.title {
     margin-left: 1em;
 }
 
+
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    position: relative;
+    top: -2px;
+}
+.right {
+    transform: rotate(-45deg);
+}
+.left {
+    transform: rotate(135deg);
+}
+.up {
+    transform: rotate(-135deg);
+}
+.down {
+    transform: rotate(45deg);
+}
+
+
 .form-container {
     padding: 1em 2em;
 }
@@ -122,16 +145,72 @@ h1.title {
     margin-top: 0;
 }
 .total-container {
-    position: absolute;
-    right: 0;
-    top: 0;
-    transform: translateY(-150%);
-}
-.total-container[data-total="0"] {
-    right: unset;
-    left: 50%;
-    transform: translateX(-50%);
+    line-height: 1.8em;
 }
 .total-container > span {
     font-weight: bold;
+    vertical-align: bottom;
+}
+
+
+.controls-container {
+    display: flex;
+    margin-bottom: .5em;
+}
+.controls-container > div:first-child {
+    flex: 1
+}
+
+.field-filter {
+    position: relative;
+    overflow: visible;
+}
+.field-filter > .filter-label {
+    cursor: pointer;
+    padding: .3em .5em;
+    background-color: #efefef;
+    border-radius: 3px;
+    border: 1px solid #767676;
+    display: inline-block;
+}
+.field-filter > .filter-label > span {
+    margin-right: .5em;
+}
+.field-filter > .options-container {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    background-color: white;
+    transform: translateY(5px);
+    border-radius: 3px;
+    border: 1px solid #767676;
+}
+.field-filter.expand > .options-container {
+    display: inline-block;
+}
+.field-filter.expand > .filter-label > i {
+    transform: rotate(-135deg);
+    top: 1px;
+}
+.field-filter .list > div,
+.field-filter .controls > div {
+    display: block;
+    padding: .3em;
+    cursor: pointer;
+}
+.field-filter .list > div:hover,
+.field-filter .controls > div:hover {
+    background-color: #efefef;
+}
+.field-filter .list > div > input,
+.field-filter .controls > div > input {
+    margin-right: .8em;
+}
+
+.field-filter .controls {
+    border-top: 1px #ccc solid;
+    padding-top: .5em;
+    padding-bottom: .5em;
 }
