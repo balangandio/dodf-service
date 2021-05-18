@@ -24,13 +24,13 @@ export default class HomeApp {
         form.setEnabled(false);
         dataList.setVisibility(false);
         try {
-            const data = this.validateFormaData(form.getData());
+            const data = this.validateFormData(form.getData());
 
             const requestResult = await this.api.search(data);
 
             dataList.setResults(requestResult);
         } catch(err) {
-            console.log(err);
+            console.error(err);
             alert(err);
         } finally {
             form.setEnabled(true);
@@ -38,7 +38,7 @@ export default class HomeApp {
         }
     }
 
-    validateFormaData({ termo, dtInicial, dtFinal }) {
+    validateFormData({ termo, dtInicial, dtFinal }) {
         if (!termo) {
             throw 'Termo não informado';
         }

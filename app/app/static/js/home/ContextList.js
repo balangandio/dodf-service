@@ -1,3 +1,5 @@
+import * as DOMutil from '../util/dom.js';
+
 export default class ContextList {
     constructor(listName) {
         this.listName = listName;
@@ -30,16 +32,10 @@ export default class ContextList {
 
         btnElements.concat(listElements).forEach(elem => {
             if (elem.getAttribute('data-list') === this.listName) {
-                this._toggleClassName(elem, className);
+                DOMutil.toggleClassName(className, elem);
             } else {
                 elem.classList.remove(className);
             }
         });
-    }
-
-    _toggleClassName(element, className) {
-        element.classList.contains(className)
-            ? element.classList.remove(className)
-            : element.classList.add(className);
     }
 }

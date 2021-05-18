@@ -59,7 +59,10 @@ export default class DataList {
         const span = document.createElement('span');
         span.innerText = total > 0 ? `Total: ${label}` : 'Nenhum registro encontrato!';
         totalContainer.append(span);
-        totalContainer.setAttribute('data-total', total);
+
+        if (total === 0) {
+            totalContainer.parentElement.setAttribute('data-total', total);
+        }
     }
 
     _createDocument(doc, term) {

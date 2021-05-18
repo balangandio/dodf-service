@@ -2,6 +2,7 @@ import re
 import nltk
 from functools import reduce
 from bs4 import BeautifulSoup
+from unidecode import unidecode
 
 from .Sentence import Sentence
 from .parser.processo import ProcessoSentenceParser
@@ -35,6 +36,9 @@ class ContratoContext(Context):
     EXTRA_ABBREVIATIONS = ['art', 'doc', 'n', 'nº']
     IGNORED_FIELDS = ['CNPJ']
     RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(\. |, |; | – | - )(?P<field_sent>(?P<field>[^:;]{1,30}): )')
+    COMMON_EXTENDED_SENTENCE = [
+        { 'separator': ', ', 'fields': ['CONTRATADO', 'CONTRATADA', 'CONTRATANTE', 'PELA CONTRATADA', 'PELO CONTRATADO', 'PELO CONTRATANTE', 'OBJETO'] }
+    ]
 
     def __init__(self, document):
         super().__init__(document)
@@ -113,10 +117,14 @@ class ContratoContext(Context):
             matches = list(self.RE_NOT_PUNCTUATED_SENTENCE_FIELD.finditer(sent))
 
             def _is_match_accepted(match):
-                if match.group(1) == ', ':
-                    _field = re.search('(?i)^(PEL[AO] )?CONTRATAD[AO]$', match.group(3))
-                    if _field is None:
-                        return False
+                separator = match.group(1)
+                field = match.group(3)
+
+                for ef in self.COMMON_EXTENDED_SENTENCE:
+                    if separator == ef['separator']:
+                        if not unidecode(field).upper() in ef['fields']:
+                            return False
+
                 return not match.group('field').upper() in self.IGNORED_FIELDS
             
             matches = list(filter(_is_match_accepted, matches))

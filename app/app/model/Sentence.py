@@ -13,9 +13,9 @@ class Sentence:
         return self.field is None and self.value is None
 
     def append(self, part: str):
-        self.sent += part
+        self.sent += ' ' + part
         if self.value != None:
-            self.value += part
+            self.value += ' ' + part
     
     @staticmethod
     def parse_sentence(sentence: str):

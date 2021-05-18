@@ -1,8 +1,11 @@
+import * as DOMutil from '../util/dom.js';
+
 export default class FieldFilter {
 
     listeners = [];
     options = [];
     inverted = false;
+    panelExpandedClass = 'expand';
 
     constructor(containerElement) {
         this.container = containerElement;
@@ -32,9 +35,17 @@ export default class FieldFilter {
         this.listeners.push(listener);
     }
 
+    togglePanel = () => {
+        DOMutil.toggleClassName(this.panelExpandedClass, this.container);
+    }
+
+    isPanelOpen() {
+        return this.container.classList.contains(this.panelExpandedClass);
+    }
+
     _bindContainer() {
         const label = this.container.querySelector('.filter-label');
-        label.addEventListener('click', this._onToggleClick);
+        label.addEventListener('click', this.togglePanel);
         
         const invertControl = this.container.querySelector('.invert-control > input');
         invertControl.addEventListener('change', this._onInvertControlChange);
@@ -43,6 +54,12 @@ export default class FieldFilter {
         invertLabel.addEventListener('click', ({ target }) => {
             if (target.tagName !== 'INPUT') {
                 invertControl.click();
+            }
+        });
+
+        document.body.addEventListener('click', ({ target }) => {
+            if (this.isPanelOpen() && !DOMutil.isParentInTree(target, this.container)) {
+                this.togglePanel();
             }
         });
     }
@@ -60,13 +77,6 @@ export default class FieldFilter {
 
     _onOptionsChange(option) {
         this._emitEvent({ type: 'option-change', option });
-    }
-
-    _onToggleClick = (event) => {
-        const className = 'expand';
-        this.container.classList.contains(className)
-            ? this.container.classList.remove(className)
-            : this.container.classList.add(className);
     }
 
     _onInvertControlChange = (event) => {

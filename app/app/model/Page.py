@@ -7,7 +7,8 @@ class Page:
     def __init__(self, json_result):
         self.details = PageDetails(json_result['paginacao'])
         self.total_overall = json_result['ttLocalizado']
-        self.documents = list(map(lambda json : Document(json), json_result['lstDocumentos']))
+        valid_docs = filter(lambda json : Document.is_valid_doc(json), json_result['lstDocumentos'])
+        self.documents = list(map(lambda json : Document(json), valid_docs))
         self.total_in_page = len(self.documents)
 
 
@@ -21,23 +22,69 @@ class PageDetails:
         return self.current >= self.total_pages
 
 
-class Document:
-    def __init__(self, result):
-        self.row_number = result['RowNumber']
-        self.titulo = result['titulo']
-        self.texto = result['texto']
-        self.preambulo = result['preambulo']
-        self.nome = result['ds_nome']
-        self.dt_previsao_publicacao = result['dt_previsao_publicacao']
-        self.tipo_jornal = result['ds_descricao_jornal_tipo']
-        self.num_ordem_demandante = result['nu_ordem_demandante']
-        self.num_regra_tipo_jornal = result['co_regra_jornal_tipo']
-        self.num_jornal = result['numero_jornal']
-        self.letra_jornal = result['letra_jornal']
-        self.tipo = result['tipo']
-        self.num_ordem_tipo_materia = result['nu_ordem_tp_materia']
-        self.secao = result['ds_secao']
-        self.ordem_tipo_materia_secao = result['ordem_tp_materia_secao']
+class Document(object):
+    def __init__(self, json_result: dict):
+        self.props_dict = json_result
+
+    @property
+    def titulo(self):
+        return self.props_dict['titulo']
+
+    @property
+    def texto(self):
+        return self.props_dict['texto']
+
+    @property
+    def row_number(self):
+        return self.props_dict['RowNumber']
+
+    @property
+    def preambulo(self):
+        return self.props_dict['preambulo']
+
+    @property
+    def nome(self):
+        return self.props_dict['ds_nome']
+
+    @property
+    def dt_previsao_publicacao(self):
+        return self.props_dict['dt_previsao_publicacao']
+
+    @property
+    def tipo_jornal(self):
+        return self.props_dict['ds_descricao_jornal_tipo']
+
+    @property
+    def num_ordem_demandante(self):
+        return self.props_dict['nu_ordem_demandante']
+
+    @property
+    def num_regra_tipo_jornal(self):
+        return self.props_dict['co_regra_jornal_tipo']
+
+    @property
+    def num_jornal(self):
+        return self.props_dict['numero_jornal']
+
+    @property
+    def letra_jornal(self):
+        return self.props_dict['letra_jornal']
+
+    @property
+    def tipo(self):
+        return self.props_dict['tipo']
+
+    @property
+    def num_ordem_tipo_materia(self):
+        return self.props_dict['nu_ordem_tp_materia']
+
+    @property
+    def secao(self):
+        return self.props_dict['ds_secao']
+
+    @property
+    def ordem_tipo_materia_secao(self):
+        return self.props_dict['ordem_tp_materia_secao']
 
     def to_dict(self):
         return {
@@ -57,6 +104,10 @@ class Document:
             'secao': self.secao,
             'ordem_tipo_materia_secao': self.ordem_tipo_materia_secao
         }
+
+    @staticmethod
+    def is_valid_doc(doc_dict):
+        return 'texto' in doc_dict and 'titulo' in doc_dict
 
 
 class PageCollection:

@@ -4,7 +4,7 @@ from ..Sentence import Sentence
 
 
 class ObjetoSentenceParser:
-    FIELD_NAMES = ['OBJETO', 'DO OBJETO']
+    FIELD_NAMES = ['OBJETO', 'DO OBJETO', 'RESUMO DO OBJETO']
     name = 'objeto'
 
     def test(self, sentence: Sentence):

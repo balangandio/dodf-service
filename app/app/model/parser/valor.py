@@ -38,6 +38,6 @@ class ValorSentenceParser:
             'value': max_value
         }
 
-    def _is_field_common_name(self, field):
+    def _is_field_common_name(self, field: str):
         field = unidecode(field).upper()
-        return field in self.FIELD_NAMES
+        return field in self.FIELD_NAMES or field.startswith('VALOR')
