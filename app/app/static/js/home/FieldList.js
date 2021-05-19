@@ -1,4 +1,5 @@
 import ContextList from './ContextList.js';
+import * as DOMutil from '../util/dom.js';
 
 export default class FieldList extends ContextList {
     renders = [
@@ -6,6 +7,7 @@ export default class FieldList extends ContextList {
         {'objeto': this._renderObjetoItem},
         {'valor': this._renderValorItem},
         {'notaEmpenho': this._renderNotaEmpenhoItem},
+        {'envolvidos': this._renderEnvolvidos},
         {'signatarios': this._renderSignatarioItem},
         {'dataPublicacao': this._renderDataPublicacao}
     ];
@@ -119,5 +121,37 @@ export default class FieldList extends ContextList {
         const item = document.createElement('li');
         item.innerText = dt;
         list.append(item);
+    }
+
+    _renderEnvolvidos(envolvidos, list) {
+        envolvidos.forEach(({ role, entity, cnpj }) => {
+            const item = document.createElement('li');
+
+            if (!role) {
+                if (!cnpj) {
+                    item.innerText = entity;
+                } else {
+                    const desc = document.createElement('span');
+                    desc.innerText = entity;
+                    item.append(desc);
+
+                    const subList = DOMutil.createList([`CNPJ: ${cnpj}`]);
+                    item.append(subList);
+                }
+            } else {
+                const desc = document.createElement('span');
+                desc.innerText = `${role.substr(0, 1).toUpperCase()}${role.substr(1)}`;
+                item.append(desc);
+
+                const subItems = cnpj
+                    ? [entity, `CNPJ: ${cnpj}`]
+                    : [entity];
+
+                const subList = DOMutil.createList(subItems);
+                item.append(subList);
+            }
+
+            list.append(item);
+        });
     }
 }

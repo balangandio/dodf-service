@@ -131,6 +131,12 @@ h1.title {
 .document-sentences > ul[data-list="fields"] li[data-field="signatarios"] > span {
     margin-bottom: .3em;
 }
+.document-sentences > ul[data-list="fields"] li[data-field="envolvidos"] li {
+    margin: .8em 0;
+}
+.document-sentences > ul[data-list="fields"] li[data-field="envolvidos"] > span {
+    margin-bottom: 0;
+}
 .document-sentences-field-list > li:first-child {
     margin-bottom: .5em;
 }

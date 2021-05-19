@@ -22,3 +22,19 @@ export function toggleClassName(className, element) {
         ? element.classList.remove(className)
         : element.classList.add(className);
 }
+
+export function createList(items, fn_bindItem) {
+    const listElement = document.createElement('ul');
+
+    items.forEach(item => {
+        const itemElement = document.createElement('li');
+
+        fn_bindItem
+            ? fn_bindItem(item, itemElement)
+            : itemElement.innerText = item;
+
+        listElement.append(itemElement);
+    });
+
+    return listElement;
+}

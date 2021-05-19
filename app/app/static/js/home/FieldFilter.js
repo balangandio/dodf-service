@@ -16,7 +16,8 @@ export default class FieldFilter {
             {value: 'valor', name: 'Valor'},
             {value: 'notaEmpenho', name: 'Nota de Empenho'},
             {value: 'signatarios', name: 'Signatários', selected: true},
-            {value: 'dataPublicacao', name: 'Dt. Publicação'}
+            {value: 'dataPublicacao', name: 'Dt. Publicação'},
+            {value: 'envolvidos', name: 'Envolvidos'}
         ]);
     }
 
