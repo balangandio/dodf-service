@@ -9,6 +9,7 @@ export default class FieldList extends ContextList {
         {'notaEmpenho': this._renderNotaEmpenhoItem},
         {'envolvidos': this._renderEnvolvidos},
         {'signatarios': this._renderSignatarioItem},
+        {'assinatura': this._renderAssinatura},
         {'dataPublicacao': this._renderDataPublicacao}
     ];
 
@@ -124,34 +125,47 @@ export default class FieldList extends ContextList {
     }
 
     _renderEnvolvidos(envolvidos, list) {
-        envolvidos.forEach(({ role, entity, cnpj }) => {
+        envolvidos.forEach(({ role, ...env }) => {
             const item = document.createElement('li');
 
-            if (!role) {
-                if (!cnpj) {
-                    item.innerText = entity;
-                } else {
-                    const desc = document.createElement('span');
-                    desc.innerText = entity;
-                    item.append(desc);
-
-                    const subList = DOMutil.createList([`CNPJ: ${cnpj}`]);
-                    item.append(subList);
-                }
-            } else {
+            if (role) {
                 const desc = document.createElement('span');
                 desc.innerText = `${role.substr(0, 1).toUpperCase()}${role.substr(1)}`;
                 item.append(desc);
 
-                const subItems = cnpj
-                    ? [entity, `CNPJ: ${cnpj}`]
-                    : [entity];
+                const subListItems = Object.keys(env)
+                    .map(prop => prop === 'cnpj'
+                        ? `CNPJ: ${env[prop]}`
+                        : env[prop]);
 
-                const subList = DOMutil.createList(subItems);
+                const subList = DOMutil.createList(subListItems);
+                item.append(subList);
+
+            } else if (!Object.keys(env).length) {
+                item.innerText = env.entity;
+            } else {
+                const { entity, ...props } = env;
+
+                const desc = document.createElement('span');
+                desc.innerText = entity;
+                item.append(desc);
+
+                const subListItems = Object.keys(props)
+                    .map(prop => prop === 'cnpj'
+                        ? `CNPJ: ${props[prop]}`
+                        : props[prop]);
+
+                const subList = DOMutil.createList(subListItems);
                 item.append(subList);
             }
 
             list.append(item);
         });
+    }
+
+    _renderAssinatura(dtAssinatura, list) {
+        const item = document.createElement('li');
+        item.innerText = dtAssinatura;
+        list.append(item);
     }
 }

@@ -11,6 +11,7 @@ from .parser.objeto import ObjetoSentenceParser
 from .parser.valor import ValorSentenceParser
 from .parser.nota_empenho import NotaEmpenhoSentenceParser
 from .parser.envolvidos import EnvolvidosSentenceParser
+from .parser.assinatura import AssinaturaSentenceParser
 
 
 class Context:
@@ -36,9 +37,9 @@ class Context:
 class ContratoContext(Context):
     EXTRA_ABBREVIATIONS = ['art', 'doc', 'n', 'nº']
     IGNORED_FIELDS = ['CNPJ']
-    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(\. |, |; | – | - )(?P<field_sent>(?P<field>[^:;]{1,30}): )')
+    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(\. |, |; | – | - )(?P<field_sent>(?P<field>[^:;]{1,30}): ?)')
     COMMON_EXTENDED_SENTENCE = [
-        { 'separator': ', ', 'fields': ['CONTRATADO', 'CONTRATADA', 'CONTRATANTE', 'PELA CONTRATADA', 'PELO CONTRATADO', 'PELO CONTRATANTE', 'OBJETO'] }
+        { 'separator': ', ', 'fields': ['CONTRATADO', 'CONTRATADA', 'CONTRATANTE', 'PELA CONTRATADA', 'PELO CONTRATADO', 'PELO CONTRATANTE', 'OBJETO', 'ASSINATURA'] }
     ]
 
     def __init__(self, document):
@@ -62,7 +63,8 @@ class ContratoContext(Context):
             ObjetoSentenceParser(),
             ValorSentenceParser(),
             NotaEmpenhoSentenceParser(),
-            EnvolvidosSentenceParser()
+            EnvolvidosSentenceParser(),
+            AssinaturaSentenceParser()
         ]
 
         fields = list(map(lambda p : (p.name, p.parse(sentences)), parsers))

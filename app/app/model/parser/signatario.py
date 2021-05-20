@@ -8,7 +8,7 @@ from ..Sentence import Sentence
 class SignatarioSentenceParser:
     FIELD_NAMES = ['ASSINATURAS', 'ASSINANTES', 'SIGNATARIOS', 'NOME DOS SIGNATARIOS', 'REPRESENTANTES', 'PARTES']
     RE_FIELD_NAME = re.compile('(?i)(PEL[AO] |P\/)(?P<entity>[^:]+): ?')
-    RE_FIELD_EXTRACT = re.compile('(?i)(,? E )?(PEL[AO] |P/)(?P<entity>(DISTRITO FEDERAL|((?!PEL[AO])[^:])+:|[^,: ]+)),? ')
+    RE_FIELD_EXTRACT = re.compile('(?i)(,? E,? )?(PEL[AO] |P/)(?P<entity>(DISTRITO FEDERAL|((?!PEL[AO])[^:])+:|[^,: ]+)),? ')
     name = 'signatarios'
 
     def test(self, sentence: Sentence):

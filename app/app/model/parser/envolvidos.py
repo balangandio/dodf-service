@@ -9,17 +9,20 @@ class EnvolvidosSentenceParser:
     FIELD_CONTRATADA = 'CONTRATADA'
     FIELD_PARTES = 'PARTES'
     FIELD_CONTRATANTES = 'CONTRATANTES'
-    RE_CNPJ = re.compile('(?i)([\.,-] )?\(?(CNPJ:? )?(N.{0,2} )?(?P<cnpj>\d{1,3}\.\d{3}\.\d{3}\/\d{4}-\d{1,2})\)?')
+    FIELD_NOME_CONTRATANTES = 'NOME DOS CONTRATANTES'
+    RE_CNPJ = re.compile('(?i)(,? inscrita [N].{0,2} )?([\.,-] )?\(?(CNPJ:? )?(N.{0,2} )?(?P<cnpj>\d{1,3}\.\d{3}\.\d{3}\/\d{4}-\d{1,2})\)?')
     RE_PARTES_SEP_BY_X = re.compile('(?i)(?P<prev>.+) X (?P<after>.+)')
-    RE_PARTES_SEP_BY_AND = re.compile('(?P<prev>.+) e (?P<after>.+)')
-    RE_PARTES_SEP_BY_AND_A = re.compile('(?P<prev>.+) e a (?P<after>.+)')
+    RE_PARTES_SEP_BY_AND = re.compile('^(o )?(?P<prev>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+) e (?P<after>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+)$')
+    RE_PARTES_SEP_BY_AND_A = re.compile('^(o )?(?P<prev>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+) e a ([Ee]mpresa )?(?P<after>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+)$')
+    RE_INLINE = re.compile('(?i) (?P<sent>(?P<field>PARTES|CONTRATANTES): (?P<value>.+))$')
     name = 'envolvidos'
 
     def parse(self, sentences: Iterable[Sentence]) -> Optional[Iterable[dict]]:
         strategies = [
             self._find_entities_contratante_contratada,
             self._find_entities_separated_by_x,
-            self._find_entities_separated_by_and
+            self._find_entities_separated_by_and,
+            self._find_entities_inline
         ]
 
         for st in strategies:
@@ -58,10 +61,14 @@ class EnvolvidosSentenceParser:
         return None
 
     def _find_entities_separated_by_and(self, sentences: Iterable[Sentence]) -> Iterable[dict]:
-        sentence = self._find_by_field(self.FIELD_CONTRATANTES, sentences)
+        fields = [self.FIELD_CONTRATANTES, self.FIELD_PARTES, self.FIELD_NOME_CONTRATANTES]
 
-        if sentence is None:
-            sentence = self._find_by_field(self.FIELD_PARTES, sentences)
+        sentence = None
+
+        for field in fields:
+            sentence = self._find_by_field(field, sentences)
+            if sentence != None:
+                break
 
         if sentence is None:
             return None
@@ -76,6 +83,28 @@ class EnvolvidosSentenceParser:
                 ]
 
         return None
+    
+    def _find_entities_inline(self, sentences: Iterable[Sentence]) -> Iterable[dict]:
+        sentences = filter(lambda s : s.value != None, sentences)
+        matches = map(lambda s : list(self.RE_INLINE.finditer(s.value)), sentences)
+        matches = filter(lambda m : len(m) == 1, matches)
+        matches = map(lambda m : m[0], matches)
+
+        strategies = [
+            self._find_entities_separated_by_x,
+            self._find_entities_separated_by_and
+        ]
+        
+        for match in matches:
+            sentence = Sentence(match.group('sent'), match.group('field'), match.group('value'))
+            
+            for st in strategies:
+                result = st([sentence])
+                if result != None:
+                    return result
+
+        return None
+
 
     def _parse_entities(self, sent: str, role: Optional[str] = None) -> dict:
         matches = list(self.RE_CNPJ.finditer(sent))
