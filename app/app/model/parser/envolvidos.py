@@ -13,7 +13,7 @@ class EnvolvidosSentenceParser:
     RE_CNPJ = re.compile('(?i)(,? inscrita [N].{0,2} )?([\.,-] )?\(?(CNPJ:? )?(N.{0,2} )?(?P<cnpj>\d{1,3}\.\d{3}\.\d{3}\/\d{4}-\d{1,2})\)?')
     RE_PARTES_SEP_BY_X = re.compile('(?i)(?P<prev>.+) X (?P<after>.+)')
     RE_PARTES_SEP_BY_AND = re.compile('^(o )?(?P<prev>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+) e (?P<after>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+)$')
-    RE_PARTES_SEP_BY_AND_A = re.compile('^(o )?(?P<prev>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+) e a ([Ee]mpresa )?(?P<after>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+)$')
+    RE_PARTES_SEP_BY_AND_A = re.compile('^(o )?(?P<prev>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+) e a (empresa )?(?P<after>((?![Pp]el[ao] [Cc]ontrata(nte|da)).)+)$')
     RE_INLINE = re.compile('(?i) (?P<sent>(?P<field>PARTES|CONTRATANTES): (?P<value>.+))$')
     name = 'envolvidos'
 

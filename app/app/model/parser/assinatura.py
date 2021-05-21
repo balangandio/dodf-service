@@ -1,10 +1,9 @@
 import re
 from unidecode import unidecode
 from typing import Iterable, Optional
-from datetime import datetime
 
 from ..Sentence import Sentence
-from ...util.date import Month
+from ...util.date import Parser
 
 
 class AssinaturaSentenceParser:
@@ -55,42 +54,8 @@ class AssinaturaSentenceParser:
         return None
 
     def _try_parse_date(self, date_str: str) -> Optional[str]:
-        strategies = [self._try_parse_short_date, self._try_parse_long_date]
-
-        for st in strategies:
-            result = st(date_str)
-            if result != None:
-                return result
-
-        return None
-
-    def _try_parse_short_date(self, date_str: str) -> Optional[str]:
-        match = self.RE_SHORT_DATE.search(date_str.replace(' ', ''))
-
-        if match != None:
-            try:
-                date = datetime.strptime(match.group('date'), '%d/%m/%Y')
-                return date.strftime('%Y-%m-%d')
-            except:
-                pass
-        return None
-    
-    def _try_parse_long_date(self, date_str: str) -> Optional[str]:
-        match = self.RE_LONG_DATE.search(date_str)
-
-        if match != None:
-            day = match.group('day')
-            month = Month.parse_str(match.group('month'))
-            year = match.group('year')
-
-            if month != None:
-                month = month.month_of_the_year()
-                try:
-                    date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%m/%Y')
-                    return date.strftime('%Y-%m-%d')
-                except:
-                    pass
-        return None
+        date = Parser.parse_date(date_str)
+        return None if date is None else date.strftime('%Y-%m-%d')
 
     def _is_field_common_name(self, field: str) -> bool:
         field = unidecode(field).upper()

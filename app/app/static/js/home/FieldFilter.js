@@ -18,6 +18,7 @@ export default class FieldFilter {
             {value: 'signatarios', name: 'Signatários', selected: true},
             {value: 'envolvidos', name: 'Envolvidos'},
             {value: 'assinatura', name: 'Dt. Assinatura'},
+            {value: 'vigencia', name: 'Vigência'},
             {value: 'dataPublicacao', name: 'Dt. Publicação'}
         ]);
     }

@@ -10,6 +10,7 @@ export default class FieldList extends ContextList {
         {'envolvidos': this._renderEnvolvidos},
         {'signatarios': this._renderSignatarioItem},
         {'assinatura': this._renderAssinatura},
+        {'vigencia': this._renderVigencia},
         {'dataPublicacao': this._renderDataPublicacao}
     ];
 
@@ -167,5 +168,32 @@ export default class FieldList extends ContextList {
         const item = document.createElement('li');
         item.innerText = dtAssinatura;
         list.append(item);
+    }
+
+    _renderVigencia({ duration, interval }, list) {
+        if (duration) {
+            const { value, unit } = duration;
+            const item = document.createElement('li');
+            item.append(`${value} ${unit}`);
+
+            list.append(item);
+        }
+
+        if (interval) {
+            const { start, end } = interval;
+            const item = document.createElement('li');
+            let desc = '';
+            if (start && end) {
+                desc = `${start} à ${end}`;
+            } else if (start) {
+                desc = `a partir de ${start}`;
+            } else if (end) {
+                desc = `até ${end}`;
+            }
+
+            item.append(`${desc}`);
+
+            list.append(item);
+        }
     }
 }

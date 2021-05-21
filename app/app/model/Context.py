@@ -12,6 +12,7 @@ from .parser.valor import ValorSentenceParser
 from .parser.nota_empenho import NotaEmpenhoSentenceParser
 from .parser.envolvidos import EnvolvidosSentenceParser
 from .parser.assinatura import AssinaturaSentenceParser
+from .parser.vigencia import VigenciaSentenceParser
 
 
 class Context:
@@ -64,7 +65,8 @@ class ContratoContext(Context):
             ValorSentenceParser(),
             NotaEmpenhoSentenceParser(),
             EnvolvidosSentenceParser(),
-            AssinaturaSentenceParser()
+            AssinaturaSentenceParser(),
+            VigenciaSentenceParser()
         ]
 
         fields = list(map(lambda p : (p.name, p.parse(sentences)), parsers))
