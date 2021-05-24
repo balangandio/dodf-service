@@ -13,6 +13,7 @@ from .parser.nota_empenho import NotaEmpenhoSentenceParser
 from .parser.envolvidos import EnvolvidosSentenceParser
 from .parser.assinatura import AssinaturaSentenceParser
 from .parser.vigencia import VigenciaSentenceParser
+from .parser.adicionais import AdicionaisSentenceParser
 
 
 class Context:
@@ -66,11 +67,12 @@ class ContratoContext(Context):
             NotaEmpenhoSentenceParser(),
             EnvolvidosSentenceParser(),
             AssinaturaSentenceParser(),
-            VigenciaSentenceParser()
+            VigenciaSentenceParser(),
+            AdicionaisSentenceParser()
         ]
 
-        fields = list(map(lambda p : (p.name, p.parse(sentences)), parsers))
-        fields = list(filter(lambda field : field[1] is not None, fields))
+        fields = map(lambda p : (p.name, p.parse(sentences)), parsers)
+        fields = filter(lambda field : field[1] is not None, fields)
         def _acc_dict(acc, field):
             acc.update({ field[0]: field[1] })
             return acc

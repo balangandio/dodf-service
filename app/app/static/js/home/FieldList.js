@@ -11,6 +11,7 @@ export default class FieldList extends ContextList {
         {'signatarios': this._renderSignatarioItem},
         {'assinatura': this._renderAssinatura},
         {'vigencia': this._renderVigencia},
+        {'adicionais': this._renderAdicionais},
         {'dataPublicacao': this._renderDataPublicacao}
     ];
 
@@ -196,4 +197,28 @@ export default class FieldList extends ContextList {
             list.append(item);
         }
     }
+
+    _renderAdicionais(fields, list) {
+        const labels = {
+            'fonteRecurso': 'Fontes de recurso',
+            'naturezaDespesa': 'Naturezas da despesa',
+            'ug': 'UG/UO',
+            'programaTrabalho': 'Programas de Trabalho'
+        };
+
+        Object.keys(labels).forEach(field => {
+            if (field in fields) {
+                let values = fields[field];
+
+                if (Array.isArray(values)) {
+                    values = values.join(', ');
+                }
+
+                const item = document.createElement('li');
+                item.append(`${labels[field]}: ${values}`);
+                list.append(item);
+            }
+        });
+    }
+
 }
