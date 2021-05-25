@@ -2,8 +2,18 @@ html, body {
     font-size: 16px;
 }
 
+.container-header {
+    display: flex;
+    margin-top: 2em;
+    padding: 1em 0;
+}
+.container-header > div:last-child {
+    flex: 1;
+}
+
 h1.title {
     margin-left: 1em;
+    margin-right: 2em;
 }
 
 
@@ -30,7 +40,7 @@ h1.title {
 
 
 .form-container {
-    padding: 1em 2em;
+    padding: .5em 2em;
 }
 .form-inner {
     display: flex;
@@ -82,71 +92,71 @@ h1.title {
     border-radius: 3px;
 }
 
-.document-sentences {
+.document-context {
     padding: 1em 0;
 }
-.document-sentences > button {
+.document-context > button {
     margin-left: .5em;
 }
-.document-sentences > button:not(:disabled) {
+.document-context > button:not(:disabled) {
     cursor: pointer;
 }
-.document-sentences > button.active {
+.document-context > button.active {
     background: white;
     border-color: transparent;
 }
-.document-sentences > button:first-child {
+.document-context > button:first-child {
     margin-left: 0;
 }
-.document-sentences > ul {
+.document-context > ul {
     background: #f9f9f9;
     margin-bottom: 0;
     padding-top: .5em;
     padding-bottom: 1.5em;
     display: none;
 }
-.document-sentences > ul.active {
+.document-context > ul.active {
     display: block;
 }
-.document-sentences > ul[data-list="fields"] {
+.document-context > ul[data-list="fields"] {
     padding-top: 1.3em;
     padding-bottom: .5em;
 }
-.document-sentences > ul[data-list="fields"] > li {
+.document-context > ul[data-list="fields"] > li {
     margin-bottom: 1em;
 }
-.document-sentences > ul[data-list="fields"] > li > span {
+.document-context > ul[data-list="fields"] > li > span {
     border-radius: 5px;
     padding: .2em;
     background: #ccc;
     margin-bottom: .8em;
     display: inline-block;
 }
-.document-sentences > ul[data-list="fields"] li[data-field="notaEmpenho"] li {
+.document-context > ul[data-list="fields"] li[data-field="notaEmpenho"] li {
     margin-bottom: .8em;
 }
-.document-sentences > ul[data-list="fields"] li[data-field="signatarios"] li {
+.document-context > ul[data-list="fields"] li[data-field="signatarios"] li {
     margin: .5em 0;
 }
-.document-sentences > ul[data-list="fields"] li[data-field="signatarios"] > span {
+.document-context > ul[data-list="fields"] li[data-field="signatarios"] > span {
     margin-bottom: .3em;
 }
-.document-sentences > ul[data-list="fields"] li[data-field="envolvidos"] li {
+.document-context > ul[data-list="fields"] li[data-field="envolvidos"] li {
     margin: .8em 0;
 }
-.document-sentences > ul[data-list="fields"] li[data-field="envolvidos"] > span {
+.document-context > ul[data-list="fields"] li[data-field="envolvidos"] > span {
     margin-bottom: 0;
 }
-.document-sentences > ul[data-list="fields"] li[data-field="vigencia"] li {
+.document-context > ul[data-list="fields"] li[data-field="vigencia"] li {
     margin: .8em 0;
 }
-.document-sentences > ul[data-list="fields"] li[data-field="vigencia"] > span {
+.document-context > ul[data-list="fields"] li[data-field="vigencia"] > span {
     margin-bottom: 0;
 }
-.document-sentences > ul[data-list="fields"] li[data-field="adicionais"] li {
+.document-context > ul[data-list="fields"] li[data-field="adicionais"] li {
     margin: .8em 0;
 }
-.document-sentences > ul[data-list="fields"] li[data-field="adicionais"] > span {
+.document-context > ul[data-list="fields"] li[data-field="adicionais"] > span {
     margin-bottom: 0;
 }
 .document-sentences-field-list > li:first-child {
@@ -193,11 +203,13 @@ h1.title {
 }
 .field-filter > .filter-label {
     cursor: pointer;
-    padding: .3em .5em;
+    padding: 0 .5em;
+    line-height: 1.8em;
     background-color: #efefef;
     border-radius: 3px;
     border: 1px solid #767676;
     display: inline-block;
+    vertical-align: middle;
 }
 .field-filter > .filter-label:hover {
     background-color: #e5e5e5;
@@ -242,4 +254,92 @@ h1.title {
     border-top: 1px #ccc solid;
     padding-top: .5em;
     padding-bottom: .5em;
+}
+
+
+.switch-container {
+    display: inline-block;
+    border: 1px solid #767676;
+    border-radius: 3px;
+    vertical-align: middle;
+    line-height: 1.8em;
+    margin-left: .3em;
+}
+.switch-container * {
+    cursor: pointer;
+}
+.switch-container > div:first-child,
+.switch-container > div:last-child {
+    position: relative;
+    padding: 0 .5em;
+}
+.switch-container > div:not(.active):first-child:hover,
+.switch-container > div:not(.active):last-child:hover {
+    background-color: #efefef;
+}
+.switch-container > div:first-child {
+    float: left;
+}
+.switch-container > div:last-child {
+    float: right;
+}
+.switch-container > div.active:first-child,
+.switch-container > div.active:last-child {
+    background-color: #ccc;
+}
+
+.data-container-list {
+    padding-top: .5em;
+}
+.data-container-list > table {
+    width: 100%;
+    border-top: 1px solid #ccc;
+    padding-top: .5em;
+}
+.data-container-list > table th {
+    background-color: #efefef;
+    padding: .5em 0;
+}
+.data-container-list > table th[data-field="vigencia"] {
+    min-width: 100px;
+}
+.data-container-list > table > tbody > tr:first-child > td {
+    padding-top: .5em;
+}
+.data-container-list > table > tbody {
+    font-size: 13px;
+}
+.data-container-list > table > tbody > tr > td {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 1em;
+    padding-top: .8em;
+}
+.data-container-list > table > tbody > tr > td[data-field="assinatura"],
+.data-container-list > table > tbody > tr > td[data-field="valor"],
+.data-container-list > table > tbody > tr > td[data-field="numeroProcesso"] {
+    white-space: nowrap;
+}
+.data-container-list > table > tbody > tr > td > ul {
+    margin: 0;
+    padding-left: 1.2em;
+}
+.data-container-list > table > tbody > tr > td > ul > li {
+    margin-bottom: .5em;
+}
+.data-container-list > table > tbody > tr > td > ul > li:last-child {
+    margin-bottom: 0;
+}
+.data-container-list > table > tbody > tr > td > ul > li > ul {
+    padding-left: 2em;
+}
+.data-container-list > table > tbody > tr > td > ul > li > ul > li {
+    margin-top: .5em;
+}
+.data-container-list > table > tbody > tr > td[data-field="numeroProcesso"] {
+    padding-right: .3em;
+    font-size: 11px;
+}
+.data-container-list > table > tbody > tr > td[data-field="objeto"] {
+    padding-right: .3em;
+    max-width: 1000px;
 }

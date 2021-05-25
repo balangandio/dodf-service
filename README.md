@@ -35,7 +35,63 @@ GET /api/contrato/2021-03-21/2021-04-14
                             "field": "Processo",
                             "value": "00054.00007911/2019-97."
                         }
-                    ]
+                    ],
+                    "fields": {
+                        "numeroProcesso": "00054.00007911/2019-97",
+                        "objeto": "A prorrogação do prazo de vigência do contrato, cujo...",
+                        "valor": {
+                            "currency": "R$",
+                            "value": 236067.6
+                        },
+                        "notaEmpenho": [
+                            "2021NE000181"
+                        ],
+                        "signatarios": [
+                            {
+                                "agent": "STÉFANO ENES LOBÃO, Chefe do Departamento.",
+                                "entity": "DISTRITO FEDERAL"
+                            }, {
+                                "agent": "CRISTIANE PEREIRA DE SOUZA DE ASSIS, na qualidade de Sócia.",
+                                "entity": "Contratada"
+                            }
+                        ],
+                        "envolvidos": [
+                            {
+                                "cnpj": "86.743.457/0001-01",
+                                "entity": "FUNDAÇÃO HEMOCENTRO DE BRASÍLIA",
+                                "role": "contratante"
+                            }, {
+                                "cnpj": "38.033.361/0001-07",
+                                "entity": "URSO BRANCO SERVIÇOS DE INSTALAÇÕES E MANUTENÇÕES EIRELI.",
+                                "role": "contratada"
+                            }
+                        ],
+                        "assinatura": "2021-04-07",
+                        "vigencia": {
+                            "duration": {
+                                "unit": "dias",
+                                "value": "90"
+                            },
+                            "interval": {
+                                "start": "2021-04-08",
+                                "end": "2021-07-08"
+                            }
+                        },
+                        "adicionais": {
+                            "fontesRecurso": [
+                                "100"
+                            ],
+                            "naturezasDespesa": [
+                                "33.90.30",
+                                "339039"
+                            ],
+                            "programasTrabalho": [
+                                "10.122.8202.8517.0063"
+                            ],
+                            "ug": "170393"
+                        },
+                        "dataPublicacao": "2021-04-13 08:00:00"
+                    }
                 },
                 "document": {
                     "dt_previsao_publicacao": "2021-03-22 08:00:00",

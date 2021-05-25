@@ -1,15 +1,19 @@
 import AppForm from './AppForm.js';
-import DataList from './DataList.js';
+import DataRender from './DataRender.js';
 import Api from '../Api.js';
 import { parseDate } from '../util/date.js';
-import FieldFilter from './FieldFilter.js';
+import ControlPanel from './ControlPanel.js';
 
 export default class HomeApp {
 
     api = new Api();
 
     init = () => {
-        this.fieldFilter = new FieldFilter(document.querySelector('.field-filter'));
+        const controlsContainer = document.querySelector('.field-filter');
+        const dataContainer = document.querySelector('.data-container');
+
+        this.controlPanel = new ControlPanel(controlsContainer);
+        this.dataRender = new DataRender(dataContainer, this.controlPanel);
 
         const form = document.querySelector('form');
         this.onFormSubmit(form);
@@ -19,22 +23,21 @@ export default class HomeApp {
         event && event.preventDefault();
 
         const form = new AppForm(formElement);
-        const dataList = new DataList(document.querySelector('.data-container'), this.fieldFilter);
 
         form.setEnabled(false);
-        dataList.setVisibility(false);
+        this.dataRender.setVisibility(false);
         try {
             const data = this.validateFormData(form.getData());
 
             const requestResult = await this.api.search(data);
 
-            dataList.setResults(requestResult);
+            this.dataRender.setResults(requestResult);
         } catch(err) {
             console.error(err);
             alert(err);
         } finally {
             form.setEnabled(true);
-            dataList.setVisibility(true);
+            this.dataRender.setVisibility(true);
         }
     }
 

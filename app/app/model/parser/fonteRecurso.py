@@ -9,7 +9,7 @@ class FonteRecursoSentenceParser:
     RE_VALUES_EXTRACT = re.compile('^(?i) ?(?P<values>\d+(( e |\/)\d+)?)')
     RE_SENTENCE_EXTRACT = re.compile('(?i)fontes?( de recursos?)?:? (CT )?(?P<values>\d+(( e |\/)\d+)?)')
     RE_NUMERIC = re.compile('\d+')
-    name = 'fonteRecurso'
+    name = 'fontesRecurso'
 
     def test(self, sentence: Sentence) -> bool:
         if sentence.field != None:

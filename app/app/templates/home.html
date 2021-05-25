@@ -12,31 +12,36 @@
 	</head>
 
 	<body>
-		<h1 class="title">Busca</h1>
-
-		<div class="form-container">
-			<form onsubmit="app.onFormSubmit(event.target, event)">
-				<div class="form-inner">
-					<div class="input-group">
-						<label>Termo</label>
-						<input type="text" name="termo" placeholder="Termo" value="contrato"
-							minlength="5" required />
-					</div>
-					<div class="input-group">
-						<label>Data inicial</label>
-						<input type="text" name="dtInicial" placeholder="Data inicial - ex.: dd/mm/yyyy" value="13/04/2021"
-							required />
-					</div>
-					<div class="input-group">
-						<label>Data final</label>
-						<input type="text" name="dtFinal" placeholder="Data final - ex.: dd/mm/yyyy" value="14/04/2021"
-							required />
-					</div>
-					<div class="input-group">
-						<button type="submit" class="btn-submit">Pesquisar</button>
-					</div>
+		<div class="container-header">
+			<div>
+				<h1 class="title">Busca</h1>
+			</div>
+			<div>
+				<div class="form-container">
+					<form onsubmit="app.onFormSubmit(event.target, event)">
+						<div class="form-inner">
+							<div class="input-group">
+								<label>Termo</label>
+								<input type="text" name="termo" placeholder="Termo" value="contrato"
+									minlength="5" required />
+							</div>
+							<div class="input-group">
+								<label>Data inicial</label>
+								<input type="text" name="dtInicial" placeholder="Data inicial - ex.: dd/mm/yyyy" value="13/04/2021"
+									required />
+							</div>
+							<div class="input-group">
+								<label>Data final</label>
+								<input type="text" name="dtFinal" placeholder="Data final - ex.: dd/mm/yyyy" value="14/04/2021"
+									required />
+							</div>
+							<div class="input-group">
+								<button type="submit" class="btn-submit">Pesquisar</button>
+							</div>
+						</div>
+					</form>
 				</div>
-			</form>
+			</div>
 		</div>
 
 		<div class="data-container hided">

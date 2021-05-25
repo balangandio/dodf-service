@@ -8,7 +8,7 @@ from ..Sentence import Sentence
 class SignatarioSentenceParser:
     FIELD_NAMES = ['ASSINATURAS', 'ASSINANTES', 'SIGNATARIOS', 'NOME DOS SIGNATARIOS', 'REPRESENTANTES', 'PARTES']
     RE_FIELD_NAME = re.compile('(?i)(PEL[AO] |P\/)(?P<entity>[^:]+): ?')
-    RE_FIELD_EXTRACT = re.compile('(?i)(,? E,? )?(PEL[AO] |P/)(?P<entity>(DISTRITO FEDERAL|((?!PEL[AO])[^:])+:|[^,: ]+)),? ')
+    RE_FIELD_EXTRACT = re.compile('(?i)(,? E,? )?(PEL[AO] |P/)(?P<entity>(DISTRITO FEDERAL|COMODANTE|CONTRATAD[AO]|((?!PEL[AO])[^,:])+:|[^,: ]+)),? ')
     name = 'signatarios'
 
     def test(self, sentence: Sentence):
@@ -64,10 +64,11 @@ class SignatarioSentenceParser:
                     'agent': sent[last_match.end():]
                 })
 
-        if len(entities) > 0:
-            return entities
+        for ent in entities:
+            if ent['entity'].endswith(':'):
+                ent['entity'] = ent['entity'][:len(ent['entity']) - 1]
 
-        return None
+        return None if len(entities) == 0  else entities
 
     def _is_field_common_name(self, field):
         field = unidecode(field).upper()

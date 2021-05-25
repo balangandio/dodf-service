@@ -39,7 +39,7 @@ class Context:
 class ContratoContext(Context):
     EXTRA_ABBREVIATIONS = ['art', 'doc', 'n', 'nº']
     IGNORED_FIELDS = ['CNPJ']
-    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(\. |, |; | – | - )(?P<field_sent>(?P<field>[^:;]{1,30}): ?)')
+    RE_NOT_PUNCTUATED_SENTENCE_FIELD = re.compile('(\. |, |; )(?P<field_sent>(?P<field>[^:;]{4,30}): ?)')
     COMMON_EXTENDED_SENTENCE = [
         { 'separator': ', ', 'fields': ['CONTRATADO', 'CONTRATADA', 'CONTRATANTE', 'PELA CONTRATADA', 'PELO CONTRATADO', 'PELO CONTRATANTE', 'OBJETO', 'ASSINATURA'] }
     ]

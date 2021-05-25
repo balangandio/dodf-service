@@ -9,7 +9,7 @@ class NaturezaDespesaSentenceParser:
     RE_VALUE_EXTRACT = re.compile('^(?i) ?(?P<values>(\d+[\d\.-]+)?\d+(( e |\/)(\d+[\d\.-]+)?\d+)?)')
     RE_SENTENCE_EXTRACT = re.compile('(?i)naturezas?( d[ea] despesa)?:? (?P<values>(\d+[\d\.-]+)?\d+(( e |\/)(\d+[\d\.-]+)?\d+)?)')
     RE_EXTRACT = re.compile('(?P<value>(\d+[\d\.-]+)?\d+)')
-    name = 'naturezaDespesa'
+    name = 'naturezasDespesa'
 
     def test(self, sentence: Sentence) -> bool:
         if sentence.field != None:

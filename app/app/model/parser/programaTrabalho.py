@@ -9,7 +9,7 @@ class ProgramaTrabalhoSentenceParser:
     RE_VALUE_EXTRACT = re.compile('^(?i) ?(n. )?(?P<values>(\d+[\d\.-]+)?\d+(( e |\/)(\d+[\d\.-]+)?\d+)?)')
     RE_SENTENCE_EXTRACT = re.compile('(?i)programas? de trabalho:? (n. )?(?P<values>(\d+[\d\.-]+)?\d+(( e |\/)(\d+[\d\.-]+)?\d+)?)')
     RE_EXTRACT = re.compile('(?P<value>(\d+[\d\.-]+)?\d+)')
-    name = 'programaTrabalho'
+    name = 'programasTrabalho'
 
     def test(self, sentence: Sentence) -> bool:
         if sentence.field != None:

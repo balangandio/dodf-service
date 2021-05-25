@@ -87,10 +87,7 @@ export default class FieldList extends ContextList {
             desc.innerText = entity;
             item.append(desc);
 
-            const objList = document.createElement('ul');
-            const subItem = document.createElement('li');
-            subItem.innerText = agent;
-            objList.append(subItem);
+            const objList = DOMutil.createList([agent]);
 
             item.append(objList);
             list.append(item);
@@ -200,10 +197,10 @@ export default class FieldList extends ContextList {
 
     _renderAdicionais(fields, list) {
         const labels = {
-            'fonteRecurso': 'Fontes de recurso',
-            'naturezaDespesa': 'Naturezas da despesa',
+            'fontesRecurso': 'Fontes de recurso',
+            'naturezasDespesa': 'Naturezas da despesa',
             'ug': 'UG/UO',
-            'programaTrabalho': 'Programas de Trabalho'
+            'programasTrabalho': 'Programas de Trabalho'
         };
 
         Object.keys(labels).forEach(field => {
