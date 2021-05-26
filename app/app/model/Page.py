@@ -28,63 +28,66 @@ class Document(object):
 
     @property
     def titulo(self):
-        return self.props_dict['titulo']
+        return self._prop('titulo')
 
     @property
     def texto(self):
-        return self.props_dict['texto']
+        return self._prop('texto')
 
     @property
     def row_number(self):
-        return self.props_dict['RowNumber']
+        return self._prop('RowNumber')
 
     @property
     def preambulo(self):
-        return self.props_dict['preambulo']
+        return self._prop('preambulo')
 
     @property
     def nome(self):
-        return self.props_dict['ds_nome']
+        return self._prop('ds_nome')
 
     @property
     def dt_previsao_publicacao(self):
-        return self.props_dict['dt_previsao_publicacao']
+        return self._prop('dt_previsao_publicacao')
 
     @property
     def tipo_jornal(self):
-        return self.props_dict['ds_descricao_jornal_tipo']
+        return self._prop('ds_descricao_jornal_tipo')
 
     @property
     def num_ordem_demandante(self):
-        return self.props_dict['nu_ordem_demandante']
+        return self._prop('nu_ordem_demandante')
 
     @property
     def num_regra_tipo_jornal(self):
-        return self.props_dict['co_regra_jornal_tipo']
+        return self._prop('co_regra_jornal_tipo')
 
     @property
     def num_jornal(self):
-        return self.props_dict['numero_jornal']
+        return self._prop('numero_jornal')
 
     @property
     def letra_jornal(self):
-        return self.props_dict['letra_jornal']
+        return self._prop('letra_jornal')
 
     @property
     def tipo(self):
-        return self.props_dict['tipo']
+        return self._prop('tipo')
 
     @property
     def num_ordem_tipo_materia(self):
-        return self.props_dict['nu_ordem_tp_materia']
+        return self._prop('nu_ordem_tp_materia')
 
     @property
     def secao(self):
-        return self.props_dict['ds_secao']
+        return self._prop('ds_secao')
 
     @property
     def ordem_tipo_materia_secao(self):
-        return self.props_dict['ordem_tp_materia_secao']
+        return self._prop('ordem_tp_materia_secao')
+    
+    def _prop(self, name):
+        return None if name not in self.props_dict else self.props_dict[name]
 
     def to_dict(self):
         return {

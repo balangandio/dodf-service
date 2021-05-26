@@ -5,6 +5,8 @@ from nltk import TokenSearcher
 
 from ..model.Parameter import ParameterMap, spread_params_in_periods
 from .Client import Client
+from ..model.Page import Document
+from ..model.Context import ContratoContext
 
 
 class Service:
@@ -21,6 +23,15 @@ class Service:
             'start_date': start_date.strftime('%Y-%m-%d'),
             'end_date': end_date.strftime('%Y-%m-%d'),
             'result': collection.to_dict()
+        }
+    
+    def analyzePost(self, post):
+        doc = Document(dict({ 'texto': post }))
+        context = ContratoContext(doc)
+
+        return {
+            'document': doc.to_dict(),
+            'context': context.to_dict()
         }
 
 

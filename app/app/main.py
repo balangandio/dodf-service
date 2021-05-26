@@ -14,6 +14,10 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
+@app.route('/post')
+def post():
+    return render_template('post.html')
+
 @app.route('/api/<term>/<start>/<end>', methods=['GET'])
 def search_by_route(term, start, end):
     result = search(term, start, end)
@@ -34,6 +38,12 @@ def search_by_params():
     result = search(params['term'], params['start'], params['end'])
     return Response(result, mimetype='application/json')
 
+@app.route('/api/post', methods=['POST'])
+def analyse_post():
+    result = analyzePost(request.form['texto'])
+
+    return Response(result, mimetype='application/json')
+
 
 def search(term, start, end):
     def cached_search():
@@ -47,6 +57,10 @@ def search(term, start, end):
     
     #return cache_in_file(cached_search, 'cache.json')
     return cached_search()
+
+def analyzePost(post):
+    result =  Service().analyzePost(post)
+    return json.dumps(result, ensure_ascii=False).encode('utf8')
 
 
 def cache_in_file(supplier, filename: str):

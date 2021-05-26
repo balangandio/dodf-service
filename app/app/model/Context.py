@@ -78,7 +78,8 @@ class ContratoContext(Context):
             return acc
         fields = reduce(_acc_dict, fields, dict())
 
-        fields.update({ 'dataPublicacao': self.document.dt_previsao_publicacao })
+        if self.document.dt_previsao_publicacao != None:
+            fields.update({ 'dataPublicacao': self.document.dt_previsao_publicacao })
 
         for sentence in sentences:
             field_list.append({

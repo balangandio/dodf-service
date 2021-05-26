@@ -1,0 +1,114 @@
+.container-header {
+    display: flex;
+    margin-top: 1em;
+    padding: 1em 0;
+}
+.container-header > div:last-child {
+    flex: 1;
+}
+
+h1.title {
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 1.5em;
+}
+
+.form-container {
+    padding: .5em 2em;
+}
+
+.input-group {
+    margin-bottom: 1em;
+    flex: 1;
+    margin-right: 1em;
+}
+.input-group label {
+    font-size: .9em;
+    margin-bottom: .5em;
+    display: block;
+}
+.input-group input {
+    font-size: 1.2em;
+    width: 150px;
+}
+.input-group textarea {
+    width: 100%
+}
+
+.content {
+    display: flex;
+    margin: 0 1em;
+}
+.content > div {
+    flex: 1
+}
+.sentences-content {
+    margin-right: .2em;   
+}
+.fields-content {
+    margin-left: .2em;   
+}
+.sentences-content > p,
+.fields-content > p {
+    margin-top: 0;
+    text-align: center;
+    font-weight: bold;
+    background: #efefef;
+    padding: .3em 0;
+    margin-bottom: 1.5em;
+}
+
+
+.document-sentences-field-list > li:first-child {
+    margin-bottom: .5em;
+}
+.document-sentences-field-list > li:first-child > span {
+    border-radius: 5px;
+    padding: .2em;
+    background: #ccc;
+}
+.document-sentences-field-list > li:last-child > span {
+    font-weight: 'bold';
+}
+
+
+ul[data-list="fields"] {
+    padding-bottom: .5em;
+}
+ul[data-list="fields"] > li {
+    margin-bottom: 1em;
+}
+ul[data-list="fields"] > li > span {
+    border-radius: 5px;
+    padding: .2em;
+    background: #ccc;
+    margin-bottom: .8em;
+    display: inline-block;
+}
+ul[data-list="fields"] li[data-field="notaEmpenho"] li {
+    margin-bottom: .8em;
+}
+ul[data-list="fields"] li[data-field="signatarios"] li {
+    margin: .5em 0;
+}
+ul[data-list="fields"] li[data-field="signatarios"] > span {
+    margin-bottom: .3em;
+}
+ul[data-list="fields"] li[data-field="envolvidos"] li {
+    margin: .8em 0;
+}
+ul[data-list="fields"] li[data-field="envolvidos"] > span {
+    margin-bottom: 0;
+}
+ul[data-list="fields"] li[data-field="vigencia"] li {
+    margin: .8em 0;
+}
+ul[data-list="fields"] li[data-field="vigencia"] > span {
+    margin-bottom: 0;
+}
+ul[data-list="fields"] li[data-field="adicionais"] li {
+    margin: .8em 0;
+}
+ul[data-list="fields"] li[data-field="adicionais"] > span {
+    margin-bottom: 0;
+}
